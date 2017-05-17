@@ -1,0 +1,14 @@
+- http://blog.demofox.org/2017/01/09/raytracing-reflection-refraction-fresnel-total-internal-reflection-and-beers-law/
+- https://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
+- http://stackoverflow.com/questions/14034525/ray-trace-refraction-looks-fake
+- https://computergraphics.stackexchange.com/questions/4490/how-to-handle-specular-highlights-with-reflection-total-internal-reflection-in
+- http://in1weekend.blogspot.com/2016/01/ray-tracing-in-one-weekend.html
+- https://www.bramz.net/data/writings/reflection_transmission.pdf
+- http://www.eng.utah.edu/~cs6958/slides/Lec17.pdf
+- https://seblagarde.wordpress.com/2013/04/29/memo-on-fresnel-equations/ (** very useful **)
+- https://www.gamedev.net/topic/616839-choose-path-in-path-tracing/ (** good overview explanation **)
+- http://home.lagoa.com/2014/04/ray-tracing-vs-path-tracing-in-plain-english/
+- http://www.dusterwald.com/2016/07/path-tracing-vs-ray-tracing/
+- https://computergraphics.stackexchange.com/questions/6/why-does-monte-carlo-ray-tracing-perform-better-than-distributed-ray-tracing
+- https://computergraphics.stackexchange.com/questions/1513/how-physically-based-is-the-diffuse-and-specular-distinction (** good summary **)
+- http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf (** all the details **)
