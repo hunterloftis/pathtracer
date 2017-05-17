@@ -12,18 +12,19 @@ class Material {
     // console.log('specMask of', this.refraction, 'is', this.specMask)
   }
   bsdf (direction, normal) {
-    if (this.metal) {
-      return {
-        reflected: this.schlick(direction, normal),
-        refracted: new Vector3(0, 0, 0),
-        diffused: new Vector3(0, 0, 0)
-      }
-    }
+    // if (this.metal > 0) {
+    //   return {
+    //     reflected: this.schlick(direction, normal),
+    //     refracted: new Vector3(0, 0, 0),
+    //     diffused: new Vector3(0, 0, 0)
+    //   }
+    // }
+    const notMetal = 1 - this.metal
     const reflected = this.schlick(direction, normal)
-    const refracted = new Vector3(1,1,1).minus(reflected).scaledBy(this.transparency)
-    const diffused = new Vector3(1,1,1).minus(reflected.plus(refracted))
-    const total = Vector3.sum(reflected, refracted, diffused)
-    if (!total.equals(new Vector3(1,1,1))) debugger
+    const refracted = new Vector3(1,1,1).minus(reflected).scaledBy(this.transparency).scaledBy(notMetal)
+    const diffused = new Vector3(1,1,1).minus(reflected.plus(refracted)).scaledBy(notMetal)
+    // const total = Vector3.sum(reflected, refracted, diffused)
+    // if (!total.equals(new Vector3(1,1,1))) debugger
     return { reflected, refracted, diffused }
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
