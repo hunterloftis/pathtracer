@@ -41,7 +41,6 @@ class Vector3 {
     return this.dividedBy(this.length)
   }
   get randomInHemisphere() {
-    //const rand = new Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalized
     const rand = Vector3.randomInSphere()
     return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)
   }

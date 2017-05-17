@@ -1,14 +1,11 @@
 class Scene {
   constructor () {
     this.objects = this._create()
-    console.log('objects:', this.objects)
   }
   intersect (ray) {
     let closest = this.objects.reduce((closest, sphere) => {
       let dist = sphere.intersectionDistance(ray)
-      return dist < closest.distance
-        ? { object: sphere, distance: dist }
-        : closest
+      return dist < closest.distance ? { object: sphere, distance: dist } : closest
     }, { object: undefined, distance: Infinity })
     if (!closest.object) return
 
