@@ -28,6 +28,9 @@ class Vector3 {
     const cos = this.dot(angle)
     return angle.minus(this.scaledBy(2 * cos))
   }
+  equals(v) {
+    return this.x === v.x && this.y === v.y && this.z === v.z
+  }
   get length() {
     return Math.sqrt(this.dot(this))
   }
@@ -44,7 +47,7 @@ class Vector3 {
   add (v) {
     if (v instanceof Vector3) { this.x += v.x; this.y += v.y; this.z += v.z }
     else { this.x += v; this.y += v; this.z += v }
-    return v
+    return this
   }
   static sum(...vectors) {
     return vectors.reduce((total, v) => total.add(v), new Vector3())

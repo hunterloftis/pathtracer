@@ -11,4 +11,8 @@
 - http://www.dusterwald.com/2016/07/path-tracing-vs-ray-tracing/
 - https://computergraphics.stackexchange.com/questions/6/why-does-monte-carlo-ray-tracing-perform-better-than-distributed-ray-tracing
 - https://computergraphics.stackexchange.com/questions/1513/how-physically-based-is-the-diffuse-and-specular-distinction (** good summary **)
-- http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf (** all the details **)
+- http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf (** all the details, the best guide **)
+- https://computergraphics.stackexchange.com/questions/2482/choosing-reflection-or-refraction-in-path-tracing
+- http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
+- https://www.cs.cmu.edu/afs/cs/academic/class/15462-f09/www/lec/lec8.pdf (** fresnel reflectance slide **)
+- http://ruh.li/GraphicsCookTorrance.html
