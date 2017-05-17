@@ -13,31 +13,24 @@ class Material {
   }
   bsdf (direction, normal) {
     if (this.metal) {
-      const schlick = this.schlick(direction, normal)
-
       return {
-        reflected: schlick,
-        refracted: 0,
-        diffused: 0
+        reflected: this.schlick(direction, normal),
+        refracted: new Vector3(0, 0, 0),
+        diffused: new Vector3(0, 0, 0)
       }
     }
     const reflected = this.schlick(direction, normal)
-    const refracted = (1 - reflected) * this.transparency //new Vector3(1,1,1).minus(reflected).scaledBy(this.transparency)
-    const diffused = 1 - (reflected + refracted) //new Vector3(1,1,1).minus(reflected.plus(refracted))
-    const total = reflected + refracted + diffused //Vector3.sum(reflected, refracted, diffused)
-    // if (!total.equals(new Vector3(1,1,1))) debugger
-    if (total !== 1) debugger
+    const refracted = new Vector3(1,1,1).minus(reflected).scaledBy(this.transparency)
+    const diffused = new Vector3(1,1,1).minus(reflected.plus(refracted))
+    const total = Vector3.sum(reflected, refracted, diffused)
+    if (!total.equals(new Vector3(1,1,1))) debugger
     return { reflected, refracted, diffused }
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
   // http://graphics.stanford.edu/courses/cs348b-10/lectures/reflection_i/reflection_i.pdf
   schlick (incident, normal) {
-    if (!this.fresnel) return 0
-    // http://stackoverflow.com/a/570749/1911432
+    if (!this.fresnel) return new Vector3(0, 0, 0)
     const cosIncident = incident.scaledBy(-1).dot(normal)
-    return this.fresnel + (1 - this.fresnel) * Math.pow(1 - cosIncident, 5)
-    // if (!this.fresnel) return new Vector3(0, 0, 0)
-    // const cosIncident = incident.scaledBy(-1).dot(normal)
-    // return this.fresnel.plus(new Vector3(1,1,1).minus(this.fresnel)).scaledBy(Math.pow(1 - cosIncident, 5))
+    return this.fresnel.plus((new Vector3(1,1,1).minus(this.fresnel)).scaledBy(Math.pow(1 - cosIncident, 5)))
   }
 }

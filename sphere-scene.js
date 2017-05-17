@@ -4,8 +4,7 @@ class SphereScene extends Scene {
     const redPlastic = new Material({
       color: new Vector3(1, 0.05, 0.05),
       // refraction: 1,
-      // fresnel: new Vector3(0.4, 0.4, 0.4)
-      fresnel: 0.04
+      fresnel: new Vector3(0.04, 0.04, 0.04)
     })
     const yellowLambert = new Material({
       color: new Vector3(1, 0.9, 0.1)
@@ -14,13 +13,11 @@ class SphereScene extends Scene {
       //color: new Vector3(0.18, 0.2, 0.8),
       // color: new Vector3(0.549, 0.556, 0.554),
       // refraction: 3,
-      // fresnel: new Vector3(0.549, 0.556, 0.554),
-      fresnel: 0.95,
+      fresnel: new Vector3(0.549, 0.556, 0.554),
       metal: true
     })
     const gold = new Material({
-      // fresnel: new Vector3(1.022, 0.782, 0.344),
-      fresnel: 0.82,
+      fresnel: new Vector3(1.022, 0.782, 0.344),
       metal: true
     })
     const pearl = new Material({
@@ -31,8 +28,7 @@ class SphereScene extends Scene {
       color: new Vector3(1, 1, 1),
       refraction: 1.6,
       transparency: 1,
-      // fresnel: new Vector3(0.045, 0.045, 0.045)
-      fresnel: 0.045
+      fresnel: new Vector3(0.04, 0.04, 0.04)
     })
     const sunlight = new Material({
       color: new Vector3(192, 191, 173),

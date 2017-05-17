@@ -68,15 +68,15 @@ class Camera {
       if (hit.entering) {
         const bsdf = material.bsdf(ray.direction, hit.normal)
         const light = new Vector3()
-        if (bsdf.reflected > 0) {
+        if (bsdf.reflected.length > 0) {
           const reflectedRay = ray.reflected(hit.point, hit.normal)
           light.add(this._trace(reflectedRay, bounces - 1).scaledBy(bsdf.reflected))
         }
-        if (bsdf.refracted > 0) {
+        if (bsdf.refracted.length > 0) {
           const refractedRay = new Ray3(hit.point, ray.direction).refracted(hit.normal1, 1 / material.refraction)
           light.add(this._trace(refractedRay, bounces - 1).scaledBy(bsdf.refracted))
         }
-        if (bsdf.diffused > 0) {
+        if (bsdf.diffused.length > 0) {
           const diffusedRay = new Ray3(hit.point, hit.normal.randomInHemisphere)
           const brdf = diffusedRay.direction.dot(hit.normal)
           light.add(this._trace(diffusedRay, bounces - 1).scaledBy(material.color).scaledBy(brdf))
