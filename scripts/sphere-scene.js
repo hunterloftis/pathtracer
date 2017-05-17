@@ -1,13 +1,35 @@
 class SphereScene extends Scene {
+  background (ray) {
+    const d = Math.sqrt(ray.direction.x * ray.direction.x + ray.direction.y * ray.direction.y)
+    const r = 0.159154943 * Math.acos(ray.direction.z) / d
+    const u = 0.5 + ray.direction.x * r
+    const v = 0.5 + ray.direction.y * -r
+    const x = u * 1500
+    const y = v * 1500
+    const pixel = this.context.getImageData(x, y, 1, 1).data
+    return new Vector3(pixel[0], pixel[1], pixel[2]).scaledBy(0.5)
+  }
   _create() {
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 1500
+    const context = this.context = canvas.getContext('2d')
+    const image = new Image()
+    const self = this
+    image.addEventListener('load', () => {
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+      self.onload()
+    }, false)
+    image.src = 'stpeters-probe.png'
+
     // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
-    const redPlastic = new Material({
-      color: new Vector3(1, 0.05, 0.05),
+    const blackPlastic = new Material({
+      color: new Vector3(0, 0, 0),
       fresnel: new Vector3(0.04, 0.04, 0.04),
       roughness: 0.5
     })
     const blueLambert = new Material({
-      color: new Vector3(0.18, 0.2, 0.8)
+      color: new Vector3(0.18, 0.2, 0.8),
+      fresnel: new Vector3(0, 0, 0)
     })
     const chromium = new Material({
       fresnel: new Vector3(0.549, 0.556, 0.554),
@@ -56,13 +78,13 @@ class SphereScene extends Scene {
       light: 1
     })
     return [
-      new Sphere(new Vector3(-2.5, -0.25, -11), 0.75, gold),
-      new Sphere(new Vector3(-0.8, -0.25, -11), 0.75, blueLambert),
-      new Sphere(new Vector3(0.8, -0.25, -11), 0.75, mirror),
-      new Sphere(new Vector3(2.5, -0.25, -11), 0.75, glass),
-      new Sphere(new Vector3(0.5, -1001, -9.25), 1000, redPlastic), // ground
-      new Sphere(new Vector3(-200, 250, -8), 200, sunlight),        // key light
-      new Sphere(new Vector3(100, 250, -8), 50, twilight)           // fill light
+      new Sphere(new Vector3(-2.5, -0, -7), 0.75, gold),
+      new Sphere(new Vector3(-0.8, -0, -7), 0.75, blueLambert),
+      new Sphere(new Vector3(0.8, -0, -7), 0.75, mirror),
+      new Sphere(new Vector3(2.5, -0, -7), 0.75, glass),
+      new Sphere(new Vector3(0.5, -1000.75, -7), 1000, blackPlastic), // ground
+      new Sphere(new Vector3(-150, 150, -20), 100, sunlight),        // key light
+      // new Sphere(new Vector3(100, 250, -8), 50, twilight)           // fill light
     ]
   }
 }

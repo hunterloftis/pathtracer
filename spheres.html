@@ -15,11 +15,11 @@
     const camera = new Camera({
       canvas: document.getElementById('viewport'),
       scene: scene,
-      fov: 32,
+      fov: 50,
       bounces: 6
     })
 
-    render()
+    scene.onload = render
 
     function render() {
       const timeout = performance.now() + TICK
