@@ -4,10 +4,11 @@ class SphereScene extends Scene {
     const redPlastic = new Material({
       color: new Vector3(1, 0.05, 0.05),
       // refraction: 1,
-      fresnel: new Vector3(0.04, 0.04, 0.04)
+      fresnel: new Vector3(0.04, 0.04, 0.04),
+      roughness: 0.5
     })
-    const yellowLambert = new Material({
-      color: new Vector3(1, 0.9, 0.1)
+    const blueLambert = new Material({
+      color: new Vector3(0.18, 0.2, 0.8)
     })
     const chromium = new Material({
       //color: new Vector3(0.18, 0.2, 0.8),
@@ -19,7 +20,8 @@ class SphereScene extends Scene {
     const gold = new Material({
       fresnel: new Vector3(1.022, 0.782, 0.344),
       color: new Vector3(1.022, 0.782, 0.344),
-      metal: 0.9
+      metal: 0.9,
+      roughness: 0.5
     })
     const copper = new Material({
       fresnel: new Vector3(0.955,0.638,0.538),
@@ -28,7 +30,13 @@ class SphereScene extends Scene {
     const silver = new Material({
       fresnel: new Vector3(0.972,0.960,0.915),
       color: new Vector3(0.972,0.960,0.915),
-      metal: 0.9
+      metal: 0.9,
+      roughness: 0.3
+    })
+    const mirror = new Material({
+      fresnel: new Vector3(0.972,0.960,0.915),
+      color: new Vector3(0.972,0.960,0.915),
+      metal: 0.999
     })
     const pearl = new Material({
       color: new Vector3(1, 1, 1),
@@ -49,9 +57,9 @@ class SphereScene extends Scene {
       light: 1
     })
     return [
-      new Sphere(new Vector3(-2.5, -0.25, -11), 0.75, yellowLambert),
-      new Sphere(new Vector3(-0.8, -0.25, -11), 0.75, gold),
-      new Sphere(new Vector3(0.8, -0.25, -11), 0.75, silver),
+      new Sphere(new Vector3(-2.5, -0.25, -11), 0.75, gold),
+      new Sphere(new Vector3(-0.8, -0.25, -11), 0.75, blueLambert),
+      new Sphere(new Vector3(0.8, -0.25, -11), 0.75, mirror),
       new Sphere(new Vector3(2.5, -0.25, -11), 0.75, glass),
       new Sphere(new Vector3(0.5, -1001, -9.25), 1000, redPlastic),        // ground
       new Sphere(new Vector3(-200, 250, -8), 200, sunlight),    // key light

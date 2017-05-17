@@ -41,7 +41,8 @@ class Vector3 {
     return this.dividedBy(this.length)
   }
   get randomInHemisphere() {
-    const rand = new Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalized
+    //const rand = new Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalized
+    const rand = Vector3.randomInSphere()
     return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)
   }
   add (v) {
@@ -51,5 +52,11 @@ class Vector3 {
   }
   static sum(...vectors) {
     return vectors.reduce((total, v) => total.add(v), new Vector3())
+  }
+  static fromAngles (theta, phi) {
+    return new Vector3(Math.cos(theta) * Math.cos(phi), Math.sin(phi), Math.sin(theta) * Math.cos(phi))
+  }
+  static randomInSphere () {
+    return Vector3.fromAngles(Math.random() * Math.PI * 2, Math.asin(Math.random() * 2 - 1))
   }
 }

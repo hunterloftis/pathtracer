@@ -70,7 +70,9 @@ class Camera {
         const light = new Vector3()
         if (bsdf.reflected.length > 0) {
           const reflectedRay = ray.reflected(hit.point, hit.normal)
-          light.add(this._trace(reflectedRay, bounces - 1).scaledBy(bsdf.reflected))
+          const roughness = Vector3.randomInSphere().scaledBy(material.roughness / 2)
+          const roughRay = new Ray3(reflectedRay.origin, reflectedRay.direction.plus(roughness).normalized)
+          light.add(this._trace(roughRay, bounces - 1).scaledBy(bsdf.reflected))
         }
         if (bsdf.refracted.length > 0) {
           const refractedRay = new Ray3(hit.point, ray.direction).refracted(hit.normal1, 1 / material.refraction)

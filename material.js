@@ -1,5 +1,5 @@
 class Material {
-  constructor ({ color, refraction, transparency, light, fresnel, metal }) {
+  constructor ({ color, refraction, transparency, light, fresnel, metal, roughness }) {
     this.color = color || new Vector3()
     this.refraction = refraction || 0
     this.transparency = transparency || 0
@@ -7,6 +7,7 @@ class Material {
     // F0 (reflectance at normal incidence)
     this.fresnel = fresnel || null
     this.metal = metal || false
+    this.roughness = roughness || 0
     // https://www.gamedev.net/topic/616839-choose-path-in-path-tracing/
     this.specMask = Math.pow(this.refraction - 1, 2) / Math.pow(this.refraction + 1, 2)
     // console.log('specMask of', this.refraction, 'is', this.specMask)
