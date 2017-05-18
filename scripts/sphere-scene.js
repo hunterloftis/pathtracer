@@ -29,7 +29,8 @@ class SphereScene extends Scene {
     })
     const blueLambert = new Material({
       color: new Vector3(0.18, 0.2, 0.8),
-      fresnel: new Vector3(0, 0, 0)
+      fresnel: new Vector3(0, 0, 0),
+      roughness: 0.5
     })
     const chromium = new Material({
       fresnel: new Vector3(0.549, 0.556, 0.554),
@@ -57,17 +58,9 @@ class SphereScene extends Scene {
       metal: 0.9
     })
     const glass = new Material({
-      color: new Vector3(1, 1, 1),
       refraction: 1.6,
-      transparency: 1,
+      transparency: new Vector3(0.8, 1, 0.9),
       fresnel: new Vector3(0.04, 0.04, 0.04)
-    })
-    const cloudyGlass = new Material({
-      color: new Vector3(0.2, 0.2, 0.2),
-      refraction: 1.6,
-      transparency: 0.8,
-      fresnel: new Vector3(0.04, 0.04, 0.04),
-      roughness: 0.1
     })
     const sunlight = new Material({
       color: new Vector3(192, 191, 173),
@@ -78,11 +71,11 @@ class SphereScene extends Scene {
       light: 1
     })
     return [
-      new Sphere(new Vector3(-2.5, -0, -7), 0.75, gold),
-      new Sphere(new Vector3(-0.8, -0, -7), 0.75, blueLambert),
-      new Sphere(new Vector3(0.8, -0, -7), 0.75, mirror),
-      new Sphere(new Vector3(2.5, -0, -7), 0.75, glass),
-      new Sphere(new Vector3(0.5, -1000.75, -7), 1000, blackPlastic), // ground
+      new Sphere(new Vector3(-2.5, 0, -7), 0.75, gold),
+      new Sphere(new Vector3(-0.8, 0, -7), 0.75, blueLambert),
+      new Sphere(new Vector3(0.8, 0, -7), 0.75, mirror),
+      new Sphere(new Vector3(2.5, 0, -7), 0.75, glass),
+      new Sphere(new Vector3(0.5, -1000.748, -7), 1000, blackPlastic), // ground
       new Sphere(new Vector3(-150, 150, -20), 100, sunlight),        // key light
       // new Sphere(new Vector3(100, 250, -8), 50, twilight)           // fill light
     ]

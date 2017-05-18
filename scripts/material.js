@@ -2,7 +2,7 @@ class Material {
   constructor ({ color, transparency, refraction, light, fresnel, metal, roughness }) {
     this.color = color || new Vector3()
     this.refraction = refraction || 0
-    this.transparency = transparency || 0
+    this.transparency = transparency || new Vector3(0, 0, 0)
     this.light = light || 0
     this.fresnel = fresnel || null  // F0 (reflectance at normal incidence)
     this.metal = metal || 0
