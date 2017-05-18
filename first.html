@@ -1,0 +1,32 @@
+<html>
+  <canvas id='viewport' width='640' height='480' style='background: #000;'></canvas>
+  <script src='scripts/vector3.js'></script>
+  <script src='scripts/ray3.js'></script>
+  <script src='scripts/camera.js'></script>
+  <script src='scripts/material.js'></script>
+  <script src='scripts/sphere.js'></script>
+  <script src='scripts/scene.js'></script>
+  <script src='scripts/first-scene.js'></script>
+  <script>
+
+    const TICK = 50
+    const BIAS = 1e-6
+    const scene = new FirstScene()
+    const camera = new Camera({
+      canvas: document.getElementById('viewport'),
+      scene: scene,
+      fov: 50,
+      bounces: 6
+    })
+
+    render()
+
+    function render() {
+      const timeout = performance.now() + TICK
+      do { camera.expose(scene) } while (performance.now() < timeout)
+      camera.draw()
+      requestAnimationFrame(render)
+    }
+
+  </script>
+</html>
