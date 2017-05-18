@@ -71,7 +71,7 @@ class SphereScene extends Scene {
       light: 1
     })
     return [
-      new Sphere(new Vector3(-2.25, 0, -4.5), 0.75, gold),
+      new Sphere(new Vector3(-2.25, -0.01, -4.5), 0.75, gold),
       new Sphere(new Vector3(-0.8, 0, -5.5), 0.75, blueLambert),
       new Sphere(new Vector3(0.8, 0, -6), 0.75, mirror),
       new Sphere(new Vector3(2, 0, -5), 0.75, glass),
