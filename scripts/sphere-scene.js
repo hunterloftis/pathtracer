@@ -7,7 +7,9 @@ class SphereScene extends Scene {
     const x = u * 1500
     const y = v * 1500
     const pixel = this.context.getImageData(x, y, 1, 1).data
-    return new Vector3(pixel[0], pixel[1], pixel[2]).scaledBy(0.5)
+    const rgb = new Vector3(pixel[0], pixel[1], pixel[2])
+    const scale = rgb.length > 440 ? 1 : 0.5
+    return new Vector3(pixel[0], pixel[1], pixel[2]).scaledBy(scale)
   }
   _create() {
     const canvas = document.createElement('canvas')
@@ -19,16 +21,21 @@ class SphereScene extends Scene {
       context.drawImage(image, 0, 0, canvas.width, canvas.height)
       self.onload()
     }, false)
-    image.src = 'stpeters-probe.png'
+    image.src = 'images/stpeters-probe.png'
 
     // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
-    const blackPlastic = new Material({
+    const shinyBlack = new Material({
       color: new Vector3(0, 0, 0),
-      fresnel: new Vector3(0.04, 0.04, 0.04),
-      roughness: 0.5
+      fresnel: new Vector3(0, 0, 0),
+      roughness: 0.1
     })
-    const blueLambert = new Material({
-      color: new Vector3(0.18, 0.2, 0.8),
+    const redPlastic = new Material({
+      color: new Vector3(0.9, 0.2, 0.1),
+      fresnel: new Vector3(0.04, 0.04, 0.04),
+      roughness: 0.1
+    })
+    const purpleSilicon = new Material({
+      color: new Vector3(0.8, 0.1, 0.9),
       fresnel: new Vector3(0, 0, 0),
       roughness: 0.5
     })
@@ -40,11 +47,12 @@ class SphereScene extends Scene {
       fresnel: new Vector3(1.022, 0.782, 0.344),
       color: new Vector3(1.022, 0.782, 0.344),
       metal: 0.9,
-      roughness: 0.5
+      roughness: 0
     })
     const copper = new Material({
       fresnel: new Vector3(0.955,0.638,0.538),
-      metal: 0.8
+      metal: 0.8,
+      roughness: 0.1
     })
     const silver = new Material({
       fresnel: new Vector3(0.972,0.960,0.915),
@@ -70,14 +78,26 @@ class SphereScene extends Scene {
       color: new Vector3(182, 126, 91),
       light: 1
     })
+    const redlight = new Material({
+      color: new Vector3(255, 50, 100),
+      light: 5
+    })
+    const greenlight = new Material({
+      color: new Vector3(100, 255, 50),
+      light: 5
+    })
+    const bluelight = new Material({
+      color: new Vector3(50, 100, 255),
+      light: 5
+    })
     return [
-      new Sphere(new Vector3(-2.25, -0.01, -4.5), 0.75, gold),
-      new Sphere(new Vector3(-0.8, 0, -5.5), 0.75, blueLambert),
-      new Sphere(new Vector3(0.8, 0, -6), 0.75, mirror),
-      new Sphere(new Vector3(2, 0, -5), 0.75, glass),
-      new Sphere(new Vector3(0.5, -1000.748, -7), 1000, blackPlastic), // ground
-      new Sphere(new Vector3(-50, 100, -25), 50, sunlight),        // key light
-      // new Sphere(new Vector3(100, 250, -8), 50, twilight)           // fill light
+      new Sphere(new Vector3(-2.25, -0.01, -4.5), 0.5, gold),
+      new Sphere(new Vector3(-0.8, 0, -5.5), 0.5, redPlastic),
+      new Sphere(new Vector3(0.8, 0.5, -4), 1, glass),
+      new Sphere(new Vector3(2.5, 0.49, -6), 1, copper),
+      new Sphere(new Vector3(-3, -0.01, -10), 0.5, shinyBlack),
+      new Sphere(new Vector3(0.5, -1000.5, -7), 1000, shinyBlack),
+      // new Sphere(new Vector3(0, 600, 0), 100, sunlight)
     ]
   }
 }
