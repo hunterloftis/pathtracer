@@ -16,3 +16,7 @@
 - http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
 - https://www.cs.cmu.edu/afs/cs/academic/class/15462-f09/www/lec/lec8.pdf (** fresnel reflectance slide **)
 - http://ruh.li/GraphicsCookTorrance.html
+
+- https://computergraphics.stackexchange.com/questions/2316/is-russian-roulette-really-the-answer (** great explanation of russian roulette **)
+
+pdf = probability density function = just dividing by the likelihood of a particular outcome

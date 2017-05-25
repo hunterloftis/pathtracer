@@ -1,9 +1,11 @@
 class Vector3 {
   constructor (x, y, z) {
-    const clone = x instanceof Vector3 ? x : { x, y, z }
-    this.x = clone.x || 0
-    this.y = clone.y || 0
-    this.z = clone.z || 0
+    this.x = x || 0
+    this.y = y || 0
+    this.z = z || 0
+  }
+  clone (v) {
+    return new Vector3(v.x, v.y, v.z)
   }
   dot (v) {
     return this.x * v.x + this.y * v.y + this.z * v.z
@@ -24,24 +26,36 @@ class Vector3 {
     if (v instanceof Vector3) return new Vector3(this.x / v.x, this.y / v.y, this.z / v.z)
     return new Vector3(this.x / v, this.y / v, this.z / v)
   }
-  reflectedBy(angle) {
-    const cos = this.dot(angle)
-    return angle.minus(this.scaledBy(2 * cos))
+  reflected (normal) {
+    const cos = normal.dot(this)
+    return this.minus(normal.scaledBy(2 * cos)).normalized  // TODO: normalized necessary?
   }
-  equals(v) {
+  // http://asawicki.info/news_1301_reflect_and_refract_functions.html
+  refracted (normal, exteriorIndex, interiorIndex) {
+    const ratio = exteriorIndex / interiorIndex
+    const nDotI = normal.dot(this)
+    const k = 1 - ratio * ratio * (1 - nDotI * nDotI)
+    if (k < 0) return null
+    const offset = normal.scaledBy(ratio * nDotI + Math.sqrt(k))
+    return this.scaledBy(ratio).minus(offset).normalized  // TODO: normalized necessary?
+  }
+  equals (v) {
     return this.x === v.x && this.y === v.y && this.z === v.z
   }
-  get length() {
+  min (n) {
+    return new Vector3(this.x < n ? n : this.x, this.y < n ? n : this.y, this.z < n ? n : this.z)
+  }
+  get length () {
     return Math.sqrt(this.dot(this))
   }
-  get array() {
+  get array () {
     return [this.x, this.y, this.z]
   }
-  get normalized() {
+  get normalized () {
     return this.dividedBy(this.length)
   }
-  get randomInHemisphere() {
-    const rand = Vector3.randomInSphere()
+  get randomInHemisphere () {
+    const rand = Vector3.randomInSphere
     return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)
   }
   add (v) {
@@ -49,13 +63,13 @@ class Vector3 {
     else { this.x += v; this.y += v; this.z += v }
     return this
   }
-  static sum(...vectors) {
+  static sum (...vectors) {
     return vectors.reduce((total, v) => total.add(v), new Vector3())
   }
   static fromAngles (theta, phi) {
     return new Vector3(Math.cos(theta) * Math.cos(phi), Math.sin(phi), Math.sin(theta) * Math.cos(phi))
   }
-  static randomInSphere () {
+  static get randomInSphere () {
     return Vector3.fromAngles(Math.random() * Math.PI * 2, Math.asin(Math.random() * 2 - 1))
   }
 }

@@ -11,9 +11,9 @@ class Sphere {
     if (det < 0) return Infinity;
     const detRoot = Math.sqrt(det);
     const t1 = b - detRoot;
-    if (t1 > BIAS) return t1;
+    if (t1 > 0) return t1;
     const t2 = b + detRoot;
-    if (t2 > BIAS) return t2;
+    if (t2 > 0) return t2;
     return Infinity;
   }
 }

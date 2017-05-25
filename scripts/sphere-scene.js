@@ -6,10 +6,10 @@ class SphereScene extends Scene {
     const v = 0.5 + ray.direction.y * -r
     const x = u * 1500
     const y = v * 1500
-    const pixel = this.context.getImageData(x, y, 1, 1).data
-    const rgb = new Vector3(pixel[0], pixel[1], pixel[2])
+    const index = (Math.floor(y) * 1500 + Math.floor(x)) * 4
+    const rgb = new Vector3(this.pixels[index], this.pixels[index + 1], this.pixels[index + 2])
     const scale = rgb.length > 440 ? 1 : 0.5
-    return new Vector3(pixel[0], pixel[1], pixel[2]).scaledBy(scale)
+    return rgb.scaledBy(scale)
   }
   _create() {
     const canvas = document.createElement('canvas')
@@ -19,6 +19,7 @@ class SphereScene extends Scene {
     const self = this
     image.addEventListener('load', () => {
       context.drawImage(image, 0, 0, canvas.width, canvas.height)
+      self.pixels = context.getImageData(0, 0, 1500, 1500).data
       self.onload()
     }, false)
     image.src = 'images/stpeters-probe.png'
@@ -45,7 +46,7 @@ class SphereScene extends Scene {
     })
     const gold = new Material({
       fresnel: new Vector3(1.022, 0.782, 0.344),
-      color: new Vector3(1.022, 0.782, 0.344),
+      color: new Vector3(1, 0.782, 0.344),
       metal: 0.9,
       roughness: 0
     })
@@ -70,34 +71,13 @@ class SphereScene extends Scene {
       transparency: new Vector3(0.8, 1, 0.9),
       fresnel: new Vector3(0.04, 0.04, 0.04)
     })
-    const sunlight = new Material({
-      color: new Vector3(192, 191, 173),
-      light: 3
-    })
-    const twilight = new Material({
-      color: new Vector3(182, 126, 91),
-      light: 1
-    })
-    const redlight = new Material({
-      color: new Vector3(255, 50, 100),
-      light: 5
-    })
-    const greenlight = new Material({
-      color: new Vector3(100, 255, 50),
-      light: 5
-    })
-    const bluelight = new Material({
-      color: new Vector3(50, 100, 255),
-      light: 5
-    })
     return [
-      new Sphere(new Vector3(-2.25, -0.01, -4.5), 0.5, gold),
-      new Sphere(new Vector3(-0.8, 0, -5.5), 0.5, redPlastic),
-      new Sphere(new Vector3(0.8, 0.5, -4), 1, glass),
-      new Sphere(new Vector3(2.5, 0.49, -6), 1, copper),
-      new Sphere(new Vector3(-3, -0.01, -10), 0.5, shinyBlack),
-      new Sphere(new Vector3(0.5, -1000.5, -7), 1000, shinyBlack),
-      // new Sphere(new Vector3(0, 600, 0), 100, sunlight)
+      new Sphere(new Vector3(-2.25, -1.01, -5.5), 0.5, gold),
+      new Sphere(new Vector3(-0.8, -1, -6.5), 0.5, redPlastic),
+      new Sphere(new Vector3(0.8, -0.5, -5), 1, glass),
+      new Sphere(new Vector3(2.5, -0.51, -7), 1, copper),
+      new Sphere(new Vector3(-3, -1.01, -11), 0.5, shinyBlack),
+      new Sphere(new Vector3(0.5, -1001.5, -8), 1000, shinyBlack),
     ]
   }
 }
