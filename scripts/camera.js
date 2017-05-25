@@ -9,8 +9,6 @@ class Camera {
     this.width = canvas.width
     this.height = canvas.height
     this.buffer = new Uint32Array(this.width * this.height * 4);
-    this.priority = new Uint8Array(this.width * this.height).fill(1)
-    this.priorityAverage = 0
     this.context = canvas.getContext('2d')
     this.image = this.context.getImageData(0, 0, this.width, this.height)
     this.paths = 0
