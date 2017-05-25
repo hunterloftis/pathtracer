@@ -9,13 +9,16 @@ class Camera {
     this.width = canvas.width
     this.height = canvas.height
     this.buffer = new Uint32Array(this.width * this.height * 4);
+    this.priority = new Uint8Array(this.width * this.height).fill(1)
+    this.priorityAverage = 0
     this.context = canvas.getContext('2d')
     this.image = this.context.getImageData(0, 0, this.width, this.height)
     this.paths = 0
     this.pathsPerFrame = this.width * this.height
   }
   expose (scene) {
-    const pixel = this.pixel
+    const index = this._indexForPath(this.paths)
+    const pixel = this._pixelForIndex(index)
     const ray = this._rayForPixel(pixel)
     const color = this._trace(ray, this.bounces)
     this._setPixel(pixel.x, pixel.y, color)
@@ -49,6 +52,14 @@ class Camera {
     const path = this.paths % this.pathsPerFrame
     const x = path % this.width
     const y = Math.floor(path / this.width)
+    return { x, y }
+  }
+  _indexForPath (path) {
+    return path % this.pathsPerFrame
+  }
+  _pixelForIndex (index) {
+    const x = index % this.width
+    const y = Math.floor(index / this.width)
     return { x, y }
   }
   _rayForPixel (pixel) {
