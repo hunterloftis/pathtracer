@@ -45,6 +45,10 @@ class Vector3 {
   min (n) {
     return new Vector3(this.x < n ? n : this.x, this.y < n ? n : this.y, this.z < n ? n : this.z)
   }
+  // https://math.stackexchange.com/questions/1461038/how-exactly-does-the-sign-of-the-dot-product-determine-the-angle-between-two-vec
+  enters (normal) {
+    return normal.dot(this) < 0
+  }
   get length () {
     return Math.sqrt(this.dot(this))
   }

@@ -69,49 +69,22 @@ class Camera {
     return new Ray3(this.origin, direction)
   }
   _trace (ray, bounces) {
-    if (ray && bounces >= 0) {
-      const hit = this.scene.intersect(ray)       // TODO: something like const { hit, normal, material }
+    if (bounces >= 0) {
+      const { hit, normal, material } = this.scene.intersect(ray)
       if (!hit) return this.scene.background(ray)
-      const material = hit.object.material
-      if (hit.entering) {
-        const samples = material.bsdf(ray.direction, hit.normal)
-        const light = samples.reduce((total, sample) => {
-          if (sample.pdf.length === 0) return total
+      if (ray.direction.enters(normal)) {
+        const samples = material.bsdf(ray.direction, normal)
+        return samples.reduce((light, sample) => {
+          if (sample.pdf.length === 0) return light
           const throughput = sample.attenuation.scaledBy(sample.pdf)  // TODO: add russian roulette here
-          const sampleRay = new Ray3(hit.point, sample.direction)
+          const sampleRay = new Ray3(hit, sample.direction)
           const sampleLight = this._trace(sampleRay, bounces - 1)
-          return total.plus(sampleLight.scaledBy(throughput))
+          return light.plus(sampleLight.scaledBy(throughput))
         }, material.light)
-        if (light.array[0] < 0 && bounces === 6) {
-          console.log(material)
-          console.log(samples)
-          debugger
-        }
-        return light
-        //
-        //
-        // const bsdf = material.bsdf(ray.direction, hit.normal)
-        // const light = new Vector3()
-        // if (bsdf.reflected.length > this.russian) {
-        //   const reflectedRay = ray.reflected(hit.point, hit.normal)
-        //   const roughness = Vector3.randomInSphere().scaledBy(material.roughness / 2)
-        //   const roughRay = new Ray3(reflectedRay.origin, reflectedRay.direction.plus(roughness).normalized)
-        //   light.add(this._trace(roughRay, bounces - 1).scaledBy(bsdf.reflected))
-        // }
-        // if (bsdf.refracted.length > this.russian) {
-        //   const refractedRay = new Ray3(hit.point, ray.direction).refracted(hit.normal1, 1 / material.refraction)
-        //   light.add(this._trace(refractedRay, bounces - 1).scaledBy(bsdf.refracted))
-        // }
-        // if (bsdf.diffused.length > this.russian) {
-        //   const diffusedRay = new Ray3(hit.point, hit.normal.randomInHemisphere)
-        //   const brdf = diffusedRay.direction.dot(hit.normal)
-        //   light.add(this._trace(diffusedRay, bounces - 1).scaledBy(material.color).scaledBy(brdf))
-        // }
-        // return light
       }
       else {
-        const direction = ray.direction.refracted(hit.normal.scaledBy(-1), material.refraction, 1)
-        const refractedRay = new Ray3(hit.point, direction)
+        const direction = ray.direction.refracted(normal.scaledBy(-1), material.refraction, 1)
+        const refractedRay = new Ray3(hit, direction)
         return this._trace(refractedRay, bounces - 1)
       }
     }
