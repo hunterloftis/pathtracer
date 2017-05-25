@@ -42,7 +42,7 @@ class Vector3 {
   equals (v) {
     return this.x === v.x && this.y === v.y && this.z === v.z
   }
-  min (n) {
+  floor (n) {
     return new Vector3(this.x < n ? n : this.x, this.y < n ? n : this.y, this.z < n ? n : this.z)
   }
   // https://math.stackexchange.com/questions/1461038/how-exactly-does-the-sign-of-the-dot-product-determine-the-angle-between-two-vec
@@ -61,6 +61,12 @@ class Vector3 {
   get randomInHemisphere () {
     const rand = Vector3.randomInSphere
     return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)
+  }
+  get max () {
+    return Math.max(this.x, this.y, this.z)
+  }
+  get min () {
+    return Math.min(this.x, this.y, this.z)
   }
   add (v) {
     if (v instanceof Vector3) { this.x += v.x; this.y += v.y; this.z += v.z }

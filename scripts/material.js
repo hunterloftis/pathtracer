@@ -18,16 +18,17 @@ class Material {
     }
     // TODO: add roughness to refractions so you can have things like frosted glass
     const refract = {
-      pdf: (new Vector3(1,1,1).minus(reflect.pdf).min(0)).scaledBy(this.transparency).scaledBy(dialectric),
+      pdf: (new Vector3(1,1,1).minus(reflect.pdf).floor(0)).scaledBy(this.transparency).scaledBy(dialectric),
       direction: direction.refracted(normal, 1, this.refraction),
       attenuation: new Vector3(1, 1, 1)
     }
     const diffuse = {
-      pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).min(0)).scaledBy(dialectric),
+      pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).floor(0)).scaledBy(dialectric),
       direction: normal.randomInHemisphere,
       attenuation: this.color
     }
-    return [ reflect, refract, diffuse ]
+    const samples = [ reflect, refract, diffuse ]
+    return samples.filter(s => s.pdf.min > 0)
   }
   bsdf_old (direction, normal) {
     const notMetal = 1 - this.metal

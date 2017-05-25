@@ -68,24 +68,25 @@ class Camera {
     const direction = new Vector3(screenX * this.zoom, screenY * this.zoom, -1).normalized;
     return new Ray3(this.origin, direction)
   }
-  _trace (ray, bounces) {
-    if (bounces >= 0) {
+  _trace (ray, bounces, roulette = new Vector3(1,1,1)) {
+    if (bounces >= 0 && Math.random() <= roulette.max) {
+      roulette = roulette.scaledBy(1 / roulette.max)
       const { hit, normal, material } = this.scene.intersect(ray)
-      if (!hit) return this.scene.background(ray)
+      if (!hit) return this.scene.background(ray).scaledBy(roulette)
       if (ray.direction.enters(normal)) {
         const samples = material.bsdf(ray.direction, normal)
-        return samples.reduce((light, sample) => {
-          if (sample.pdf.length === 0) return light
-          const throughput = sample.attenuation.scaledBy(sample.pdf)  // TODO: add russian roulette here
+        const light = samples.reduce((light, sample) => {
+          const luminosity = sample.attenuation.scaledBy(sample.pdf)  // TODO: add russian roulette here
           const sampleRay = new Ray3(hit, sample.direction)
-          const sampleLight = this._trace(sampleRay, bounces - 1)
-          return light.plus(sampleLight.scaledBy(throughput))
+          const sampleLight = this._trace(sampleRay, bounces - 1, luminosity.scaledBy(roulette))
+          return light.plus(sampleLight.scaledBy(luminosity))
         }, material.light)
+        return light.scaledBy(roulette)
       }
       else {
         const direction = ray.direction.refracted(normal.scaledBy(-1), material.refraction, 1)
         const refractedRay = new Ray3(hit, direction)
-        return this._trace(refractedRay, bounces - 1)
+        return this._trace(refractedRay, bounces - 1, roulette).scaledBy(roulette)
       }
     }
     return BLACK
