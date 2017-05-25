@@ -1,0 +1,14 @@
+{
+  "name": "revconf-pathtracing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:hunterloftis/pathtracer.git",
+  "author": "Hunter Loftis <hunter@hunterloftis.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "http-server -c-1 -p 8000"
+  },
+  "dependencies": {
+    "http-server": "^0.10.0"
+  }
+}
