@@ -32,7 +32,7 @@ class SphereScene extends Scene {
       roughness: 0.1
     })
     const redPlastic = new Material({
-      color: new Vector3(0.9, 0.2, 0.1),
+      color: new Vector3(1, 0.1, 0.1),
       fresnel: new Vector3(0.04, 0.04, 0.04),
       roughness: 0.1
     })
@@ -44,8 +44,8 @@ class SphereScene extends Scene {
     })
     const copper = new Material({
       fresnel: new Vector3(0.955,0.638,0.538),
-      metal: 0.8,
-      roughness: 0.1
+      metal: 0.9,
+      roughness: 0
     })
     const silver = new Material({
       fresnel: new Vector3(0.972,0.960,0.915),
@@ -66,16 +66,16 @@ class SphereScene extends Scene {
     const glowPlastic = new Material({
       fresnel: new Vector3(0.04, 0.04, 0.04),
       roughness: 0.3,
-      light: new Vector3(150, 300, 450)
+      light: new Vector3(100, 500, 2500)
     })
     return [
       new Sphere(new Vector3(-2.25, -0.51, -5.5), 1, gold),
-      new Sphere(new Vector3(0, -1, -7), 0.5, redPlastic),
+      // new Sphere(new Vector3(0, -1, -7), 0.5, redPlastic),
       new Sphere(new Vector3(0.8, -0.5, -5), 1, greenGlass),
-      new Sphere(new Vector3(3, -0.51, -9), 1, greenGlass),
+      new Sphere(new Vector3(3, -0.51, -10), 1, redPlastic),
       new Sphere(new Vector3(6, -0.51, -12), 1, glowPlastic),
       new Sphere(new Vector3(0.5, -1001.5, -8), 1000, shinyBlack),
-      new Sphere(new Vector3(-0.5, 3.5, -20), 5, silver)
+      new Sphere(new Vector3(-0.5, 4, -20), 5, copper)
     ]
   }
 }

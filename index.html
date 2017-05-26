@@ -1,5 +1,19 @@
 <html>
-  <canvas id='viewport' width='640' height='480' style='background: #000;'></canvas>
+  <head>
+    <title>Path Tracer</title>
+    <style>
+      body {
+        background: #222;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #viewport {
+        box-shadow: 3px 3px 100px #000
+      }
+    </style>
+  </head>
+  <canvas id='viewport' width='1280' height='720' style='background: #000;'></canvas>
   <script src='scripts/vector3.js'></script>
   <script src='scripts/ray3.js'></script>
   <script src='scripts/camera.js'></script>
