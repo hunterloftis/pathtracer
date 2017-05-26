@@ -4,9 +4,6 @@ class Vector3 {
     this.y = y || 0
     this.z = z || 0
   }
-  clone (v) {
-    return new Vector3(v.x, v.y, v.z)
-  }
   dot (v) {
     return this.x * v.x + this.y * v.y + this.z * v.z
   }
@@ -39,9 +36,6 @@ class Vector3 {
     const offset = normal.scaledBy(ratio * nDotI + Math.sqrt(k))
     return this.scaledBy(ratio).minus(offset).normalized  // TODO: normalized necessary?
   }
-  equals (v) {
-    return this.x === v.x && this.y === v.y && this.z === v.z
-  }
   floor (n) {
     return new Vector3(this.x < n ? n : this.x, this.y < n ? n : this.y, this.z < n ? n : this.z)
   }
@@ -67,14 +61,6 @@ class Vector3 {
   }
   get min () {
     return Math.min(this.x, this.y, this.z)
-  }
-  add (v) {
-    if (v instanceof Vector3) { this.x += v.x; this.y += v.y; this.z += v.z }
-    else { this.x += v; this.y += v; this.z += v }
-    return this
-  }
-  static sum (...vectors) {
-    return vectors.reduce((total, v) => total.add(v), new Vector3())
   }
   static fromAngles (theta, phi) {
     return new Vector3(Math.cos(theta) * Math.cos(phi), Math.sin(phi), Math.sin(theta) * Math.cos(phi))

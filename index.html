@@ -13,9 +13,11 @@
       }
     </style>
   </head>
-  <canvas id='viewport' width='1280' height='720' style='background: #000;'></canvas>
+  <canvas id='viewport' width='640' height='360' style='background: #000;'></canvas>
+  <script src='scripts/loop.js'></script>
   <script src='scripts/vector3.js'></script>
   <script src='scripts/ray3.js'></script>
+  <script src='scripts/tracer.js'></script>
   <script src='scripts/camera.js'></script>
   <script src='scripts/material.js'></script>
   <script src='scripts/sphere.js'></script>
@@ -23,24 +25,17 @@
   <script src='scripts/sphere-scene.js'></script>
   <script>
 
-    const TICK = 50
-    const BIAS = 1e-6
-    const scene = new SphereScene()
-    const camera = new Camera({
-      canvas: document.getElementById('viewport'),
-      scene: scene,
-      fov: 40,
-      bounces: 10
-    })
+    main()
 
-    scene.onload = render
-
-    function render() {
-      const timeout = performance.now() + TICK
-      do { camera.expose(scene) } while (performance.now() < timeout)
-      camera.draw(true)
-      requestAnimationFrame(render)
+    async function main () {
+      const scene = new SphereScene()
+      const tracer = new Tracer({
+        canvas: document.getElementById('viewport'),
+        scene: await scene.load(),
+        bounces: 10
+      })
+      loop(50, () => tracer.expose(), () => tracer.draw(true))
     }
-
+    
   </script>
 </html>
