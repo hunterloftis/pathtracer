@@ -63,11 +63,10 @@ class SphereScene extends Scene {
       transparency: new Vector3(0.8, 1, 0.9),
       fresnel: new Vector3(0.04, 0.04, 0.04)
     })
-    // TODO: a Material subclass with a bsdf that emits more light at angles closer to the normal
     const glowPlastic = new Material({
       fresnel: new Vector3(0.04, 0.04, 0.04),
       roughness: 0.3,
-      light: new Vector3(60, 120, 240)
+      light: new Vector3(150, 300, 450)
     })
     return [
       new Sphere(new Vector3(-2.25, -0.51, -5.5), 1, gold),

@@ -28,7 +28,10 @@ class Material {
       attenuation: this.color
     }
     const samples = [ reflect, refract, diffuse ]
-    return samples.filter(s => s.pdf.min > 0)
+    return {
+      samples: samples.filter(s => s.pdf.min > 0),
+      emit: this.light.scaledBy(direction.scaledBy(-1).dot(normal))
+    }
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
   // http://graphics.stanford.edu/courses/cs348b-10/lectures/reflection_i/reflection_i.pdf
