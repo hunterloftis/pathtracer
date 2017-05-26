@@ -35,7 +35,7 @@ class Camera {
   }
   _setPixel (x, y, color) {
     const index = (x + (y * this.width)) * 4
-    const exposures = Math.ceil(this.paths / this.pathsPerFrame)
+    const exposures = Math.ceil((this.paths + 1) / this.pathsPerFrame)
     const rgb = color.array
     for (let i = 0; i < 3; i++) {
       this.buffer[index + i] += rgb[i]
