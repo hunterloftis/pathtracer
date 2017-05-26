@@ -72,7 +72,7 @@ class SphereScene extends Scene {
       fresnel: new Vector3(0.04, 0.04, 0.04)
     })
     const greenGlass = new Material({
-      refraction: 1.6,
+      refraction: 1.52,
       transparency: new Vector3(0.8, 1, 0.9),
       fresnel: new Vector3(0.04, 0.04, 0.04)
     })
@@ -81,7 +81,7 @@ class SphereScene extends Scene {
       new Sphere(new Vector3(0, -1, -7), 0.5, redPlastic),
       new Sphere(new Vector3(0.8, -0.5, -5), 1, greenGlass),
       new Sphere(new Vector3(3, -0.51, -9), 1, greenGlass),
-      new Sphere(new Vector3(3, -1.01, -11), 0.5, gold),
+      new Sphere(new Vector3(6, -0.51, -12), 1, gold),
       new Sphere(new Vector3(0.5, -1001.5, -8), 1000, shinyBlack),
       new Sphere(new Vector3(-0.5, 3.5, -20), 5, silver)
     ]

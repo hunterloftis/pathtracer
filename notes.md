@@ -18,5 +18,7 @@
 - http://ruh.li/GraphicsCookTorrance.html
 
 - https://computergraphics.stackexchange.com/questions/2316/is-russian-roulette-really-the-answer (** great explanation of russian roulette **)
+- http://steve.hollasch.net/cgindex/render/refraction.txt
+- https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
 
 pdf = probability density function = just dividing by the likelihood of a particular outcome

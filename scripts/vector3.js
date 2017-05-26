@@ -36,6 +36,7 @@ class Vector3 {
     const nDotI = normal.dot(this)
     const k = 1 - ratio * ratio * (1 - nDotI * nDotI)
     if (k < 0) return null
+    // if (k < 0) return this.reflected(normal.scaledBy(-1))  // total internal reflection. something like this.
     const offset = normal.scaledBy(ratio * nDotI + Math.sqrt(k))
     return this.scaledBy(ratio).minus(offset).normalized  // TODO: normalized necessary?
   }
