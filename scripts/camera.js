@@ -69,13 +69,11 @@ class Camera {
     return new Ray3(this.origin, direction)
   }
   _trace (ray, bounces, attenuation = 1) {
-    // attenuation = 1
     if (bounces >= 0 && Math.random() <= attenuation) {
       const gain = 1 / attenuation
-      const { hit, normal, material, entering } = this.scene.intersect(ray)
+      const { hit, normal, material } = this.scene.intersect(ray)
       if (!hit) return this.scene.background(ray).scaledBy(gain)
-      // if (ray.direction.enters(normal)) {
-      if (entering) {
+      if (ray.direction.enters(normal)) {
         const samples = material.bsdf(ray.direction, normal)
         const light = samples.reduce((total, sample) => {
           const luminosity = sample.attenuation.scaledBy(sample.pdf)
@@ -86,7 +84,6 @@ class Camera {
         return light.scaledBy(gain)
       }
       else {
-        // return new Vector3(1000, 0, 0)
         const direction = ray.direction.refracted(normal.scaledBy(-1), material.refraction, 1)
         const refractedRay = new Ray3(hit, direction)
         return this._trace(refractedRay, bounces - 1, attenuation).scaledBy(gain)

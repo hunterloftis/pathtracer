@@ -30,13 +30,6 @@ class Material {
     const samples = [ reflect, refract, diffuse ]
     return samples.filter(s => s.pdf.min > 0)
   }
-  bsdf_old (direction, normal) {
-    const notMetal = 1 - this.metal
-    const reflected = this._schlick(direction, normal)
-    const refracted = new Vector3(1,1,1).minus(reflected).scaledBy(this.transparency).scaledBy(notMetal)
-    const diffused = new Vector3(1,1,1).minus(reflected.plus(refracted)).scaledBy(notMetal)
-    return { reflected, refracted, diffused }
-  }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
   // http://graphics.stanford.edu/courses/cs348b-10/lectures/reflection_i/reflection_i.pdf
   _schlick (incident, normal) {

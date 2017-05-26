@@ -12,6 +12,7 @@ class SphereScene extends Scene {
     return rgb.scaledBy(scale)
   }
   _create() {
+    // TODO: un-jankify
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 1500
     const context = this.context = canvas.getContext('2d')
@@ -35,15 +36,6 @@ class SphereScene extends Scene {
       fresnel: new Vector3(0.04, 0.04, 0.04),
       roughness: 0.1
     })
-    const purpleSilicon = new Material({
-      color: new Vector3(0.8, 0.1, 0.9),
-      fresnel: new Vector3(0, 0, 0),
-      roughness: 0.5
-    })
-    const chromium = new Material({
-      fresnel: new Vector3(0.549, 0.556, 0.554),
-      metal: 0.9
-    })
     const gold = new Material({
       fresnel: new Vector3(1.022, 0.782, 0.344),
       color: new Vector3(1, 0.782, 0.344),
@@ -61,11 +53,6 @@ class SphereScene extends Scene {
       metal: 0.9,
       roughness: 0
     })
-    const mirror = new Material({
-      fresnel: new Vector3(0.972,0.960,0.915),
-      color: new Vector3(0.5, 0.5, 0.5),
-      metal: 0.9
-    })
     const glass = new Material({
       refraction: 1.6,
       transparency: new Vector3(1, 1, 1),
@@ -76,12 +63,18 @@ class SphereScene extends Scene {
       transparency: new Vector3(0.8, 1, 0.9),
       fresnel: new Vector3(0.04, 0.04, 0.04)
     })
+    // TODO: a Material subclass with a bsdf that emits more light at angles closer to the normal
+    const glowPlastic = new Material({
+      fresnel: new Vector3(0.04, 0.04, 0.04),
+      roughness: 0.3,
+      light: new Vector3(60, 120, 240)
+    })
     return [
       new Sphere(new Vector3(-2.25, -0.51, -5.5), 1, gold),
       new Sphere(new Vector3(0, -1, -7), 0.5, redPlastic),
       new Sphere(new Vector3(0.8, -0.5, -5), 1, greenGlass),
       new Sphere(new Vector3(3, -0.51, -9), 1, greenGlass),
-      new Sphere(new Vector3(6, -0.51, -12), 1, gold),
+      new Sphere(new Vector3(6, -0.51, -12), 1, glowPlastic),
       new Sphere(new Vector3(0.5, -1001.5, -8), 1000, shinyBlack),
       new Sphere(new Vector3(-0.5, 3.5, -20), 5, silver)
     ]

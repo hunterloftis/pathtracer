@@ -14,9 +14,7 @@ class Scene {
     if (!closest.object) return {}
     const point = ray.origin.plus(ray.direction.scaledBy(closest.distance))
     const normal = point.minus(closest.object.center).normalized
-    const normal1 = normal.dot(ray.direction) < 0 ? normal : normal.scaledBy(-1)
-    const entering = normal.dot(normal1) > 0
-    return { hit: point, normal, material: closest.object.material, entering }
+    return { hit: point, normal, material: closest.object.material }
   }
   background (ray) {
     return new Vector3()
