@@ -9,6 +9,7 @@ class Tracer {
     this.buffer = new Uint32Array(this.width * this.height * 4);
     this.context = canvas.getContext('2d')
     this.image = this.context.getImageData(0, 0, this.width, this.height)
+    this.exposures = new Uint32Array(this.width * this.height).fill(0)
     this.paths = 0
     this.pathsPerFrame = this.width * this.height
     this._camera = new Camera({ fov: 40 })
@@ -17,8 +18,14 @@ class Tracer {
     const index = this._indexForPath(this.paths)
     const pixel = this._pixelForIndex(index)
     const ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
-    const color = this._trace(ray, this.bounces)
-    this._setPixel(pixel.x, pixel.y, color)
+    const rgb = this._trace(ray, this.bounces).array
+    const exposures = ++this.exposures[index]
+    const indexRGBA = index * 4
+    for (let i = 0; i < 3; i++) {
+      this.buffer[indexRGBA + i] += rgb[i]
+      this.image.data[indexRGBA + i] = this._gamma(this.buffer[indexRGBA + i] / exposures, 2.2)
+    }
+    this.image.data[indexRGBA + 3] = 255
     this.paths++
   }
   draw (debug = false) {

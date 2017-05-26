@@ -1,4 +1,3 @@
-
 class Scene {
   constructor () {
     this.objects = []
