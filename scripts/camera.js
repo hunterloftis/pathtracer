@@ -75,12 +75,13 @@ class Camera {
       if (!hit) return this.scene.background(ray).scaledBy(gain)
       if (ray.direction.enters(normal)) {
         const samples = material.bsdf(ray.direction, normal)
-        return samples.reduce((light, sample) => {
+        const light = samples.reduce((total, sample) => {
           const luminosity = sample.attenuation.scaledBy(sample.pdf)
           const sampleRay = new Ray3(hit, sample.direction)
           const sampleLight = this._trace(sampleRay, bounces - 1, sample.attenuation.max * attenuation)
-          return light.plus(sampleLight.scaledBy(luminosity)).scaledBy(gain)
+          return total.plus(sampleLight.scaledBy(luminosity))
         }, material.light)
+        return light.scaledBy(gain)
       }
       else {
         const direction = ray.direction.refracted(normal.scaledBy(-1), material.refraction, 1)
