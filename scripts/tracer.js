@@ -10,39 +10,38 @@ class Tracer {
     this.paths = 0
     this._camera = new Camera({ fov: 40 })
     this._black = new Vector3()
+    this._lastPixel = { x: 0, y: 0 }
+    this.context.fillStyle = '#fff'
   }
-  expose () {
-    const index = this._indexForPath(this.paths)
-    const pixel = this._pixelForIndex(index)
+  exposeRandom() {
+    const x = Math.floor(Math.random() * this.width)
+    const y = Math.floor(Math.random() * this.height)
+    this.expose({ x, y })
+  }
+  exposeNext() {
+    const index = this.paths % (this.width * this.height)
+    const x = index % this.width
+    const y = Math.floor(index / this.width)
+    this.expose({ x, y })
+  }
+  expose (pixel) {
     const ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
     const rgb = this._trace(ray, this.bounces).array
-    const rgba = index * 4
-    const exposures = ++this.buffer[rgba + 3]
+    const index = (pixel.x + pixel.y * this.width) * 4
+    const exposures = ++this.buffer[index + 3]
     for (let i = 0; i < 3; i++) {
-      this.buffer[rgba + i] += rgb[i]
-      this.pixels[rgba + i] = this._gamma(this.buffer[rgba + i] / exposures)
+      this.buffer[index + i] += rgb[i]
+      this.pixels[index + i] = this._gamma(this.buffer[index + i] / exposures)
     }
     this.paths++
+    this._lastPixel = pixel
   }
   draw (debug = false) {
     this.context.putImageData(this.imageData, 0, 0)
-    if (debug) {
-      const index = this._indexForPath(this.paths)
-      const pixel = this._pixelForIndex(index)
-      this.context.fillStyle = '#fff'
-      this.context.fillRect(0, pixel.y, this.width, 1)
-    }
+    if (debug) this.context.fillRect(0, this._lastPixel.y, this.width, 1)
   }
   _gamma (brightness) {
     return Math.pow(brightness / 255, (1 / this.gamma)) * 255
-  }
-  _indexForPath (path) {
-    return path % (this.width * this.height)
-  }
-  _pixelForIndex (index) {
-    const x = index % this.width
-    const y = Math.floor(index / this.width)
-    return { x, y }
   }
   _trace (ray, bounces, attenuation = 1) {
     if (bounces >= 0 && Math.random() <= attenuation) {

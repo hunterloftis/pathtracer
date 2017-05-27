@@ -34,7 +34,7 @@
         scene: await scene.load(),
         bounces: 10
       })
-      loop(50, () => tracer.expose(), () => tracer.draw(true))
+      loop(50, () => tracer.exposeNext(), () => tracer.draw(true))
     }
     
   </script>
