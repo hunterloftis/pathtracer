@@ -14,18 +14,18 @@ class Material {
     const reflect = {
       pdf: this._schlick(direction, normal),
       direction: direction.reflected(normal).plus(rough).normalized,
-      attenuation: new Vector3(1, 1, 1)
+      energy: new Vector3(1, 1, 1)
     }
     // TODO: add roughness to refractions so you can have things like frosted glass
     const refract = {
       pdf: (new Vector3(1,1,1).minus(reflect.pdf).floor(0)).scaledBy(this.transparency).scaledBy(dialectric),
       direction: direction.refracted(normal, 1, this.refraction),
-      attenuation: new Vector3(1, 1, 1)
+      energy: new Vector3(1, 1, 1)
     }
     const diffuse = {
       pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).floor(0)).scaledBy(dialectric),
       direction: normal.randomInHemisphere,
-      attenuation: this.color
+      energy: this.color
     }
     const samples = [ reflect, refract, diffuse ]
     return {

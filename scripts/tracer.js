@@ -43,27 +43,28 @@ class Tracer {
   _gamma (brightness) {
     return Math.pow(brightness / 255, (1 / this.gamma)) * 255
   }
-  _trace (ray, bounces, attenuation = 1) {
-    if (bounces >= 0 && Math.random() <= attenuation) {
-      const gain = 1 / attenuation
-      const { hit, normal, material } = this.scene.intersect(ray)
-      if (!hit) return this.scene.background(ray).scaledBy(gain)
-      if (ray.direction.enters(normal)) {
-        const bsdf = material.bsdf(ray.direction, normal)
-        const light = bsdf.samples.reduce((total, sample) => {
-          const luminosity = sample.attenuation.scaledBy(sample.pdf)
-          const sampleRay = new Ray3(hit, sample.direction)
-          const sampleLight = this._trace(sampleRay, bounces - 1, sample.attenuation.max * attenuation)
-          return total.plus(sampleLight.scaledBy(luminosity))
-        }, bsdf.emit)
-        return light.scaledBy(gain)
-      }
-      else {
-        const direction = ray.direction.refracted(normal.scaledBy(-1), material.refraction, 1)
-        const refractedRay = new Ray3(hit, direction)
-        return this._trace(refractedRay, bounces - 1, attenuation).scaledBy(gain)
-      }
+  _trace (ray, bounces, strength = 1) {
+    const terminate = bounces < 0 || Math.random() > strength
+    if (terminate) return this._black
+
+    const gain = 1 / strength
+    const { hit, normal, material } = this.scene.intersect(ray)
+    if (!hit) return this.scene.background(ray).scaledBy(gain)
+
+    if (!ray.direction.enters(normal)) {
+      const direction = ray.direction.refracted(normal.scaledBy(-1), material.refraction, 1)
+      const refractedRay = new Ray3(hit, direction)
+      return this._trace(refractedRay, bounces - 1, strength).scaledBy(gain)
     }
-    return this._black
+
+    const bsdf = material.bsdf(ray.direction, normal)
+    return bsdf.samples.reduce(traceSamples.bind(this), bsdf.emit).scaledBy(gain)
+
+    function traceSamples(totalLight, sample) {
+      const sampleRay = new Ray3(hit, sample.direction)
+      const sampleLight = this._trace(sampleRay, bounces - 1, sample.energy.max * strength)
+      const luminosity = sample.energy.scaledBy(sample.pdf)
+      return totalLight.plus(sampleLight.scaledBy(luminosity))
+    }
   }
 }
