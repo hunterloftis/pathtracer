@@ -1,14 +1,13 @@
 class Camera {
-  constructor ({ position = new Vector3(), direction = new Vector3(0, 0, -1) }) {
-    this.position = position
-    this.direction = direction
-    this.sensor = 0.024         // full frame format (36x24mm)
-    this.focalLength = 0.055    // 55mm lens
-    this.focus = 1.0281
-    this.imageDistance = this.focalLength * this.focus + 1E-6  // distance from lens to sensor
-    this.objectDistance = -1 / (1 / this.focalLength - 1 / this.imageDistance)
-    this.fStop = 1.4
+  constructor ({ position, direction, sensor, focalLength, focusDistance, fStop }) {
+    this.position = position || new Vector3()
+    this.direction = direction || new Vector3(0, 0, -1)
+    this.sensor = sensor || 0.024                   // full frame format (36x24mm)
+    this.focalLength = focalLength || 0.055         // 55mm lens
+    this.objectDistance = -focusDistance || -2      // focus on objects 2 meters from the lens
+    this.fStop = fStop || 1.4                       // wide-open aperture
     this.aperture = this.focalLength / this.fStop
+    this.imageDistance = 1 / (1 / this.focalLength - 1 / this.objectDistance)
   }
   ray (x, y, width, height) {
     const origin = new Vector3()
