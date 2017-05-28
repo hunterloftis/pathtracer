@@ -2,30 +2,52 @@ class Camera {
   constructor ({ position = new Vector3(), direction = new Vector3(0, 0, -1) }) {
     this.position = position
     this.direction = direction
-    this.focalLength = 0.035 // 35mm
-    this.sensor = 0.024 // full frame height
-    this.fStop = 5.6
+    this.sensor = 0.024         // full frame format (36x24mm)
+    this.focalLength = 0.055    // 55mm lens
+    this.focus = 1.0281
+    this.imageDistance = this.focalLength * this.focus + 1E-6  // distance from lens to sensor
+    this.objectDistance = -1 / (1 / this.focalLength - 1 / this.imageDistance)
+    this.fStop = 1.4
     this.aperture = this.focalLength / this.fStop
   }
   ray (x, y, width, height) {
+    const origin = new Vector3()
+
+    // find the physical point ("pixel") on the sensor
     const aspect = width / height
-    const vx = x / width * aspect - 0.5
-    const vy = y / height - 0.5
+    const vx = ((x + Math.random()) / width - 0.5) * aspect
+    const vy = (y + Math.random()) / height - 0.5
     const sensorX = -vx * this.sensor
     const sensorY = vy * this.sensor
-    const sensor = new Vector3(sensorX, sensorY, this.focalLength)
-    const sensorToLens = this.position.minus(sensor)
-    const lensToWorld = new Ray3(this.position, sensorToLens.normalized)
-    return lensToWorld
+    const sensorPoint = new Vector3(sensorX, sensorY, this.imageDistance)
+  
+    // find the ideal ray this would create through a pinhole aperture
+    const sensorToLens = origin.minus(sensorPoint)
+    const lensWorldRay = new Ray3(origin, sensorToLens.normalized)
+    
+    // find where this perfect ray intersects the focus plane ("object distance")
+    const focusRatio = this.objectDistance / lensWorldRay.direction.z
+    const focusPoint = lensWorldRay.direction.scaledBy(focusRatio)
+
+    // find a random point somewhere within the aperture on the lens
+    const apertureOffset = this._pointInAperture()
+    const aperturePoint = new Vector3(apertureOffset.x, apertureOffset.y, 0)
+
+    // create a ray from this point in the aperture to the focus point
+    const apertureToFocus = focusPoint.minus(aperturePoint)
+    const apertureWorldRay = new Ray3(aperturePoint, apertureToFocus.normalized)
+
+    // debugger
+
+    return apertureWorldRay
   }
-  rayPinhole (x, y, width, height) {
-    const aspect = width / height
-    const viewX = (x + Math.random()) / width  // map pixel X to 0:1 with random jitter
-    const viewY = (y + Math.random()) / height // map pixel Y to 0:1 with random jitter
-    const screenX = (2 * viewX - 1) * aspect;  // map 0:1 to -aspect:aspect
-    const screenY = (2 * viewY - 1) * -1;  // map 0:1 to 1:-1
-    const direction = new Vector3(screenX * this._zoom, screenY * this._zoom, -1).normalized;
-    // TODO: rotate direction by angular delta between direction and (0, 0, -1)
-    return new Ray3(this.position, direction)
+  // http://mathworld.wolfram.com/DiskPointPicking.html
+  _pointInAperture () {
+    const rMax = this.aperture / 2
+    const r = Math.sqrt(Math.random() * rMax * rMax)
+    const angle = Math.random() * Math.PI * 2
+    const x = r * Math.cos(angle)
+    const y = r * Math.sin(angle)
+    return { x, y }
   }
 }

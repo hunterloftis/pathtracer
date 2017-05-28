@@ -29,6 +29,12 @@
 - https://github.com/wuhao1117/CUDA-Path-Tracer
 - https://liar.bramz.net/2005/12/04/depth-of-field/
 - http://www.linkwitzlab.com/dpp/camera%20lens.htm
+- https://steveharveynz.wordpress.com/2012/12/21/ray-tracer-part-5-depth-of-field/
+- https://en.wikipedia.org/wiki/Focal_length#In_photography
+- https://photo.stackexchange.com/questions/73338/since-its-not-focal-length-what-is-the-term-for-the-distance-at-which-things
+- https://www.bhphotovideo.com/explora/photography/tips-and-solutions/how-focus-works
+- https://digital-photography-school.com/photography-101-lenses-and-focus/
 
+- https://www.easycalculation.com/physics/classical-physics/convex-mirror-equation-calculator.php (** actual calculator to check results **)
 
 pdf = probability density function = just dividing by the likelihood of a particular outcome

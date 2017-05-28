@@ -4,13 +4,16 @@ class SphereScene extends Scene {
     const materials = this.materials
     this.environment = 'images/stpeters-probe.png'
     this.objects = [
-      new Sphere(new Vector3(-2.25, -0.51, -5.5), 1, materials.gold),
-      // new Sphere(new Vector3(0, -1, -7), 0.5, materials.redPlastic),
-      new Sphere(new Vector3(0.8, -0.5, -5), 1, materials.greenGlass),
-      new Sphere(new Vector3(3, -0.51, -10), 1, materials.redPlastic),
-      new Sphere(new Vector3(6, -0.51, -12), 1, materials.glowPlastic),
-      new Sphere(new Vector3(0.5, -1001.5, -8), 1000, materials.shinyBlack),
-      new Sphere(new Vector3(-0.5, 4, -20), 5, materials.copper)
+      new Sphere(new Vector3(-0.5, 0, -4), 0.25, materials.redPlastic),
+      new Sphere(new Vector3(0, 0, -2), 0.25, materials.redPlastic),
+      new Sphere(new Vector3(0.25, 0, -1), 0.25, materials.redPlastic)
+      // new Sphere(new Vector3(-2.25, -0.51, -5.5), 1, materials.gold),
+      // // new Sphere(new Vector3(0, -1, -7), 0.5, materials.redPlastic),
+      // new Sphere(new Vector3(0.8, -0.5, -5), 1, materials.greenGlass),
+      // new Sphere(new Vector3(3, -0.51, -10), 1, materials.redPlastic),
+      // new Sphere(new Vector3(6, -0.51, -12), 1, materials.glowPlastic),
+      // new Sphere(new Vector3(0.5, -1001.5, -8), 1000, materials.shinyBlack),
+      // new Sphere(new Vector3(-0.5, 4, -20), 5, materials.copper)
     ]
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
