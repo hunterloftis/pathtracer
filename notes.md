@@ -20,5 +20,15 @@
 - https://computergraphics.stackexchange.com/questions/2316/is-russian-roulette-really-the-answer (** great explanation of russian roulette **)
 - http://steve.hollasch.net/cgindex/render/refraction.txt
 - https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
+- http://l2program.co.uk/786/little-tweaks-here-and-there
+
+- http://courses.washington.edu/css552/2016.Winter/FinalProjects/2.DOF/Final_Project_Presentation.pdf
+- https://stackoverflow.com/questions/10012219/how-to-implement-depth-of-field-in-ray-tracer
+- https://digital-photography-school.com/understanding-depth-field-beginners/
+- https://physicssoup.wordpress.com/2012/05/18/why-does-a-small-aperture-increase-depth-of-field/ (** fantastic explanation of camera physics **)
+- https://github.com/wuhao1117/CUDA-Path-Tracer
+- https://liar.bramz.net/2005/12/04/depth-of-field/
+- http://www.linkwitzlab.com/dpp/camera%20lens.htm
+
 
 pdf = probability density function = just dividing by the likelihood of a particular outcome

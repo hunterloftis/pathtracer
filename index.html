@@ -1,18 +1,21 @@
 <html>
-  <head>
-    <title>Path Tracer</title>
-    <style>
-      body {
-        background: #222;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #viewport {
-        box-shadow: 3px 3px 100px #000
-      }
-    </style>
-  </head>
+<head>
+  <title>Path Tracer</title>
+  <style>
+
+  body {
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #viewport {
+    box-shadow: 3px 3px 100px #000
+  }
+  
+  </style>
+</head>
+<body>
   <canvas id='viewport' width='640' height='360' style='background: #000;'></canvas>
   <script src='scripts/loop.js'></script>
   <script src='scripts/vector3.js'></script>
@@ -25,17 +28,17 @@
   <script src='scripts/sphere-scene.js'></script>
   <script>
 
-    main()
-
-    async function main () {
-      const scene = new SphereScene()
-      const tracer = new Tracer({
-        canvas: document.getElementById('viewport'),
-        scene: await scene.load(),
-        bounces: 10
-      })
-      loop(50, () => tracer.exposeNext(), () => tracer.draw(true))
-    }
-    
+  main()
+  async function main () {
+    const scene = new SphereScene()
+    const tracer = new Tracer({
+      canvas: document.getElementById('viewport'),
+      scene: await scene.load(),
+      bounces: 10
+    })
+    loop(50, () => tracer.exposeNext(), () => tracer.draw(true))
+  }
+  
   </script>
+</body>
 </html>
