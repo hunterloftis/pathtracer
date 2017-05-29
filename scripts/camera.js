@@ -1,10 +1,10 @@
 class Camera {
-  constructor ({ position, direction, sensor, focalLength, focusDistance, fStop }) {
+  constructor ({ position, direction, sensor, lens, focus, fStop }) {
     this.position = position || new Vector3()
     this.direction = direction || new Vector3(0, 0, -1)
     this.sensor = sensor || 0.024                   // full frame format (36x24mm)
-    this.focalLength = focalLength || 0.055         // 55mm lens
-    this.objectDistance = -focusDistance || -2      // focus on objects 2 meters from the lens
+    this.focalLength = lens || 0.055         // 55mm lens
+    this.objectDistance = -focus || -2      // focus on objects 2 meters from the lens
     this.fStop = fStop || 1.4                       // wide-open aperture
     this.aperture = this.focalLength / this.fStop
     this.imageDistance = 1 / (1 / this.focalLength - 1 / this.objectDistance)
@@ -34,11 +34,11 @@ class Camera {
 
     // create a ray from this point in the aperture to the focus point
     const apertureToFocus = focusPoint.minus(aperturePoint)
-    const apertureWorldRay = new Ray3(aperturePoint, apertureToFocus.normalized)
+    // const apertureWorldRay = new Ray3(aperturePoint, apertureToFocus.normalized)
 
-    // debugger
-
-    return apertureWorldRay
+    // transform to the camera's origin and direction
+    const camRay = new Ray3(this.position, apertureToFocus.normalized)
+    return camRay
   }
   // http://mathworld.wolfram.com/DiskPointPicking.html
   _pointInAperture () {
