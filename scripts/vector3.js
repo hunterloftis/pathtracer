@@ -7,9 +7,23 @@ class Vector3 {
   dot (v) {
     return this.x * v.x + this.y * v.y + this.z * v.z
   }
+  // https://rosettacode.org/wiki/Vector_products
+  cross (v) {
+    return new Vector3(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x)
+  }
   plus (v) {
     if (v instanceof Vector3) return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z)
     return new Vector3(this.x + v, this.y + v, this.z + v)
+  }
+  // https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+  angleAxis (angle, axis) {
+    const v = this
+    const k = axis
+    const theta = angle * Math.PI / 180
+    const first = v.scaledBy(Math.cos(theta))
+    const second = (k.cross(v)).scaledBy(Math.sin(theta))
+    const third = k.scaledBy(k.dot(v)).scaledBy(1 - Math.cos(theta))
+    return first.plus(second).plus(third)
   }
   minus (v) {
     if (v instanceof Vector3) return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z)
