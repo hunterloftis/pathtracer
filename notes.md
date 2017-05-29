@@ -37,5 +37,6 @@
 
 - https://www.easycalculation.com/physics/classical-physics/convex-mirror-equation-calculator.php (** actual calculator to check results **)
 - http://noamkroll.com/28mm-lenses-the-secret-ingredient-for-achieving-a-film-look/
+- http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/
 
 pdf = probability density function = just dividing by the likelihood of a particular outcome

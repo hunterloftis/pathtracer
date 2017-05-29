@@ -8,6 +8,8 @@ class Camera {
     this.fStop = fStop || 1.4                       // wide-open aperture
     this.aperture = this.focalLength / this.fStop
     this.imageDistance = 1 / (1 / this.focalLength - 1 / this.objectDistance)
+    this.xDegrees = 30
+    this.yDegrees = 10
   }
   ray (x, y, width, height) {
     const origin = new Vector3()
@@ -33,12 +35,18 @@ class Camera {
     const aperturePoint = new Vector3(apertureOffset.x, apertureOffset.y, 0)
 
     // create a ray from this point in the aperture to the focus point
-    const apertureToFocus = focusPoint.minus(aperturePoint)
+    const direction = focusPoint.minus(aperturePoint).normalized
     // const apertureWorldRay = new Ray3(aperturePoint, apertureToFocus.normalized)
 
     // transform to the camera's origin and direction
-    const camRay = new Ray3(this.position, apertureToFocus.normalized)
-    return camRay
+    // https://matthew-brett.github.io/teaching/rotation_2d.html
+    const xRad = this.xDegrees * Math.PI / 180
+    const yRad = this.yDegrees * Math.PI / 180
+    const z2 = direction.z * Math.cos(xRad) - direction.y * Math.sin(xRad)
+    const y2 = direction.z * Math.sin(xRad) + direction.y * Math.cos(xRad)
+    const rotatedDirection = new Vector3(direction.x, y2, z2)
+
+    return new Ray3(this.position, rotatedDirection)
   }
   // http://mathworld.wolfram.com/DiskPointPicking.html
   _pointInAperture () {
