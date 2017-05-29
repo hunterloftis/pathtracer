@@ -16,7 +16,7 @@
   </style>
 </head>
 <body>
-  <canvas id='viewport' width='640' height='360' style='background: #000;'></canvas>
+  <canvas id='viewport' width='1280' height='720' style='background: #000;'></canvas>
   <script src='scripts/loop.js'></script>
   <script src='scripts/vector3.js'></script>
   <script src='scripts/ray3.js'></script>
@@ -34,7 +34,7 @@
     const tracer = new Tracer({
       canvas: document.getElementById('viewport'),
       scene: await scene.load(),
-      camera: new Camera({ lens: 0.040, focus: 20, position: new Vector3(0, 15, 15) }),
+      camera: new Camera({ lens: 0.040, focus: 20, position: new Vector3(-1, 13, 11) }),
       bounces: 10
     })
     loop(50, () => tracer.exposeNext(), () => tracer.draw(true))

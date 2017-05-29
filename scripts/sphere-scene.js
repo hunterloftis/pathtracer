@@ -12,13 +12,16 @@ class SphereScene extends Scene {
       new Sphere(new Vector3(0.8, -0.5, -5), 1, materials.greenGlass),
       new Sphere(new Vector3(3, -0.51, -10), 1, materials.redPlastic),
       new Sphere(new Vector3(6, -0.51, -12), 1, materials.glowPlastic),
-      new Sphere(new Vector3(0.5, -1001.5, -8), 1000, materials.shinyBlack),
-      new Sphere(new Vector3(-0.5, 4, -20), 5, materials.copper)
+      new Sphere(new Vector3(0.5, -1001.5, -8), 1000, materials.whiteLambert),
+      new Sphere(new Vector3(-0.5, 6, -20), 7, materials.copper)
     ]
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
   get materials () {
     return {
+      whiteLambert: new Material({
+        color: new Vector3(1, 1, 1)
+      }),
       shinyBlack: new Material({
         color: new Vector3(0, 0, 0),
         fresnel: new Vector3(0, 0, 0),
@@ -33,7 +36,7 @@ class SphereScene extends Scene {
         fresnel: new Vector3(1.022, 0.782, 0.344),
         color: new Vector3(1, 0.782, 0.344),
         metal: 0.9,
-        roughness: 0
+        roughness: 0.1
       }),
       copper: new Material({
         fresnel: new Vector3(0.955,0.638,0.538),
@@ -59,7 +62,8 @@ class SphereScene extends Scene {
       glowPlastic: new Material({
         fresnel: new Vector3(0.04, 0.04, 0.04),
         roughness: 0.3,
-        light: new Vector3(100, 500, 2500)
+        light: new Vector3(100, 500, 2400),
+        transparency: new Vector3(0.4, 0.4, 0.4)
       })
     }
   }
