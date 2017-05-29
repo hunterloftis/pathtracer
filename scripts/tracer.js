@@ -1,5 +1,5 @@
 class Tracer {
-  constructor ({ canvas, scene, bounces, gamma = 2.2}) {
+  constructor ({ canvas, scene, bounces, camera, gamma = 2.2}) {
     Object.assign(this, { scene, bounces, gamma })
     this.width = canvas.width
     this.height = canvas.height
@@ -8,7 +8,7 @@ class Tracer {
     this.imageData = this.context.getImageData(0, 0, this.width, this.height)
     this.pixels = this.imageData.data.fill(255)
     this.paths = 0
-    this._camera = new Camera({ fov: 40 })
+    this._camera = camera || new Camera({ fov: 40 })
     this._black = new Vector3()
     this._lastPixel = { x: 0, y: 0 }
     this.context.fillStyle = '#fff'
