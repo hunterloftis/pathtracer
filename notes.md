@@ -39,4 +39,39 @@
 - http://noamkroll.com/28mm-lenses-the-secret-ingredient-for-achieving-a-film-look/
 - http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/
 
-pdf = probability density function = just dividing by the likelihood of a particular outcome
+- https://computergraphics.stackexchange.com/questions/2563/full-monte-carlo-volumetric-scattering
+- http://www.cs.cornell.edu/courses/cs6630/2012sp/notes/09volpath.pdf
+
+- https://computergraphics.stackexchange.com/questions/3884/controlling-reflection-and-refraction-with-material-properties-in-ray-tracing (after reflections, opacity is really just level of scattering)
+- http://blog.selfshadow.com/publications/s2015-shading-course/
+- http://blog.selfshadow.com/publications/s2015-shading-course/chan/s2015_pbs_cod_aw_notes.pdf
+
+- https://pixelandpoly.com/ior.html (list of index of refractions)
+- https://macdesignstudio.wordpress.com/2012/01/05/vray-materials-part-3-reflections/ (materials kind of like the go path tracer's)
+- https://seblagarde.wordpress.com/2012/04/30/dontnod-specular-and-glossiness-chart/ (nice, simplified specular + roughness + diffuse materials system like my engine is currently using)
+- https://www.marmoset.co/posts/physically-based-rendering-and-you-can-too/ (great stuff on materials)
+- https://www.marmoset.co/wp-content/uploads/2014/01/materialref03.png
+- https://docs.unrealengine.com/latest/INT/Engine/Rendering/Materials/PhysicallyBased/ (similar material setup)
+- http://blog.selfshadow.com/publications/s2012-shading-course/burley/s2012_pbs_disney_brdf_slides_v2.pdf (more good materials examples)
+- http://filmicworlds.com/blog/everything-is-shiny/
+
+- https://www.marmoset.co/posts/basic-theory-of-physically-based-rendering/ (** really fantastic non-math non-code overview for artists**)
+- http://renderwonk.com/publications/s2010-shading-course/gotanda/slide_practical_implementation_at_triace.pdf (index of refraction vs f0 / schlick)
+- https://www.fxguide.com/featured/game-environments-parta-remember-me-rendering/ (materials charts)
+
+- http://www.codinglabs.net/article_physically_based_rendering_cook_torrance.aspx (calculate f0 from index of refraction)
+- https://seblagarde.wordpress.com/2011/08/17/feeding-a-physical-based-lighting-mode/ (f0 and indices of refraction)
+
+Best:
+
+- https://www.marmoset.co/posts/basic-theory-of-physically-based-rendering/ (overview of PBR)
+- https://www.cs.dartmouth.edu/~wjarosz/publications/dissertation/chapter4.pdf (participating media)
+- http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf (reflections & refractions)
+- http://web.cs.wpi.edu/~emmanuel/courses/cs563/write_ups/zackw/realistic_raytracing.html (historical overview of ray tracing => path tracing, rendering equation)
+- http://www.iquilezles.org/www/articles/simplepathtracing/simplepathtracing.htm (super scrappy and pragmatic walkthrough)
+
+Future work:
+
+- http://www.rorydriscoll.com/2009/01/07/better-sampling/
+- https://www.cs.dartmouth.edu/~wjarosz/publications/dissertation/chapter4.pdf (participating media)
+- http://www.cs.utah.edu/~boulos/ppt/ppt.pdf (phase functions)
