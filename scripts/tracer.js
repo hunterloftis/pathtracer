@@ -14,6 +14,7 @@ class Tracer {
     this._lastPixel = { x: 0, y: 0 }
     this.context.fillStyle = '#fff'
     this._gamma = this._gamma.bind(this)
+    this._noisyDelta = 50
   }
   exposeRandom() {
     const x = Math.floor(Math.random() * this.width)
@@ -27,18 +28,29 @@ class Tracer {
     this.expose({ x, y })
   }
   expose (pixel) {
-    const ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
-    const rgb = this._trace(ray, this.bounces).array
-    const index = (pixel.x + pixel.y * this.width) * 4
-    const exposures = ++this.buffer[index + 3]
-    const average = new Float32Array(3)
-    for (let i = 0; i < 3; i++) {
-      this.buffer[index + i] += rgb[i]
-      average[i] = this.buffer[index + i] / exposures
-    }
-    this.pixels.set(this._mapped(average), index)
+    let traces = 0
+    let delta
+    do {
+      const ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
+      const light = this._trace(ray, this.bounces)
+      const rgb = light.array
+      const index = (pixel.x + pixel.y * this.width) * 4
+      const exposures = ++this.buffer[index + 3]
+      const current = this._indexValue(index)
+      const average = new Float32Array(3)
+      for (let i = 0; i < 3; i++) {
+        this.buffer[index + i] += rgb[i]
+        average[i] = this.buffer[index + i] / exposures
+      }
+      this.pixels.set(this._mapped(average), index)
+      this._lastPixel = pixel
+      traces++
+      delta = light.minus(current).length
+    } while (delta > this._noisyDelta && traces < 3)
     this.paths++
-    this._lastPixel = pixel
+  }
+  _indexValue (index) {
+    return new Vector3(...this.buffer.slice(index, index + 3))
   }
   draw (debug = false) {
     this.context.putImageData(this.imageData, 0, 0)
