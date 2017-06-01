@@ -2,18 +2,14 @@ class SphereScene extends Scene {
   constructor () {
     super()
     const materials = this.materials
-    this.environment = 'images/stpeters-probe.png'
+    this.environment = 'images/uffizi-probe.png'
     this.objects = [
-      // new Sphere(new Vector3(-0.5, 0, -4), 0.25, materials.redPlastic),
-      // new Sphere(new Vector3(0, 0, -2), 0.25, materials.redPlastic),
-      // new Sphere(new Vector3(0.25, 0, -1), 0.25, materials.redPlastic)
-      new Sphere(new Vector3(-2.25, -0.51, -5.5), 1, materials.gold),
-      // new Sphere(new Vector3(0, -1, -7), 0.5, materials.redPlastic),
-      new Sphere(new Vector3(0.8, -0.5, -5), 1, materials.greenGlass),
-      new Sphere(new Vector3(3, -0.51, -10), 1, materials.redPlastic),
-      new Sphere(new Vector3(6, -0.51, -12), 1, materials.glowPlastic),
-      new Sphere(new Vector3(0.5, -1001.5, -8), 1000, materials.whiteLambert),
-      new Sphere(new Vector3(-0.5, 6, -20), 7, materials.copper)
+      new Sphere(new Vector3(-3.3, 1, -4.6), 1, materials.gold),
+      new Sphere(new Vector3(-1.1, 1, -5), 1, materials.bluePlastic),
+      new Sphere(new Vector3(1, 1, -5), 1, materials.silver),
+      new Sphere(new Vector3(3.2, 1, -4.8), 1, materials.greenGlass),
+      new Sphere(new Vector3(0.5, -1000, -8), 1000, materials.whiteLambert),
+      new Sphere(new Vector3(2, 1, 1), 1, materials.whiteLambert)
     ]
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
@@ -21,24 +17,24 @@ class SphereScene extends Scene {
     return {
       whiteLambert: new Material({
         color: new Vector3(1, 1, 1),
-        fresnel: new Vector3(0.02, 0.02, 0.02),
-        roughness: 1
+        fresnel: new Vector3(0.04, 0.04, 0.04),
+        roughness: 0.9
       }),
       shinyBlack: new Material({
         color: new Vector3(0, 0, 0),
         fresnel: new Vector3(0, 0, 0),
         roughness: 0.1
       }),
-      redPlastic: new Material({
-        color: new Vector3(1, 0.1, 0.1),
+      bluePlastic: new Material({
+        color: new Vector3(0.1, 0.2, 1),
         fresnel: new Vector3(0.04, 0.04, 0.04),
         roughness: 0.1
       }),
       gold: new Material({
         fresnel: new Vector3(1.022, 0.782, 0.344),
-        color: new Vector3(1, 0.782, 0.344),
-        metal: 0.9,
-        roughness: 0.1
+        color: new Vector3(0, 0, 0),
+        metal: 1,
+        roughness: 0.3
       }),
       copper: new Material({
         fresnel: new Vector3(0.955,0.638,0.538),
@@ -53,13 +49,14 @@ class SphereScene extends Scene {
       }),
       glass: new Material({
         refraction: 1.6,
-        transparency: new Vector3(1, 1, 1),
+        transparency: 1,
         fresnel: new Vector3(0.04, 0.04, 0.04)
       }),
       greenGlass: new Material({
         refraction: 1.52,
-        transparency: new Vector3(0.8, 1, 0.9),
-        fresnel: new Vector3(0.04, 0.04, 0.04)
+        transparency: 0.9,
+        color: new Vector3(0, 1, 0),
+        fresnel: new Vector3(0.05, 0.05, 0.05)
       }),
       glowPlastic: new Material({
         fresnel: new Vector3(0.04, 0.04, 0.04),

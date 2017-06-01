@@ -53,6 +53,10 @@ class Vector3 {
   floor (n) {
     return new Vector3(this.x < n ? n : this.x, this.y < n ? n : this.y, this.z < n ? n : this.z)
   }
+  lerp (v, n) {
+    const m = 1 - n
+    return new Vector3(this.x * m + v.x * n, this.y * m + v.y * n, this.z * m + v.z * n)
+  }
   // https://math.stackexchange.com/questions/1461038/how-exactly-does-the-sign-of-the-dot-product-determine-the-angle-between-two-vec
   enters (normal) {
     return normal.dot(this) < 0

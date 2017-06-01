@@ -8,26 +8,43 @@ class Material {
     this.metal = metal || 0
     this.roughness = roughness || 0
   }
-  bsdf (direction, normal) {
-    const dialectric = 1 - this.metal
-    const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
-    const reflect = {
-      pdf: this._schlick(direction, normal),
-      direction: direction.reflected(normal).plus(rough).normalized,
-      energy: new Vector3(1, 1, 1)
+  // TODO: take length of ray into account (and reduce energy by that amount here, instead of in bsdf - first step towards participating media / volumetric fog)
+  bsdf (direction, normal, distance) {
+    const samples = []
+    const entering = direction.enters(normal)
+    if (entering) {
+      const dialectric = 1 - this.metal
+      const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
+      const reflect = {
+        pdf: this._schlick(direction, normal),
+        direction: direction.reflected(normal).plus(rough).normalized,
+        energy: new Vector3(1, 1, 1)
+      }
+      // TODO: add roughness to refractions so you can have things like frosted glass
+      const refract = {
+        pdf: (new Vector3(1,1,1).minus(reflect.pdf).floor(0)).scaledBy(this.transparency * dialectric),
+        direction: direction.refracted(normal, 1, this.refraction),
+        energy: new Vector3(1, 1, 1)
+      }
+      const diffuse = {
+        pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).floor(0)).scaledBy(dialectric),
+        direction: normal.randomInHemisphere,
+        energy: this.color
+      }
+      samples.push(reflect, refract, diffuse)
     }
-    // TODO: add roughness to refractions so you can have things like frosted glass
-    const refract = {
-      pdf: (new Vector3(1,1,1).minus(reflect.pdf).floor(0)).scaledBy(this.transparency).scaledBy(dialectric),
-      direction: direction.refracted(normal, 1, this.refraction),
-      energy: new Vector3(1, 1, 1)
+    else {
+      const exitDirection = direction.refracted(normal.scaledBy(-1), this.refraction, 1)
+      if (exitDirection) {
+        const volume = Math.min((1 - this.transparency) * distance * distance, 1)
+        const refract = {
+          pdf: new Vector3(1, 1, 1),
+          direction: exitDirection,
+          energy: new Vector3(1, 1, 1).lerp(this.color, volume)
+        }
+        samples.push(refract)
+      }
     }
-    const diffuse = {
-      pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).floor(0)).scaledBy(dialectric),
-      direction: normal.randomInHemisphere,
-      energy: this.color
-    }
-    const samples = [ reflect, refract, diffuse ]
     return {
       samples: samples.filter(s => s.pdf.min > 0),
       emit: this.light.scaledBy(direction.scaledBy(-1).dot(normal))

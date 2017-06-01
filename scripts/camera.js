@@ -1,5 +1,5 @@
 class Camera {
-  constructor ({ position, direction, sensor, lens, focus, fStop }) {
+  constructor ({ position, direction, sensor, lens, focus, fStop, horizontalAngle, verticalAngle }) {
     this.position = position || new Vector3()
     this.direction = direction || new Vector3(0, 0, -1)
     this.sensor = sensor || 0.024                   // full frame format (36x24mm)
@@ -8,8 +8,8 @@ class Camera {
     this.fStop = fStop || 1.4                       // wide-open aperture
     this.aperture = this.focalLength / this.fStop
     this.imageDistance = 1 / (1 / this.focalLength - 1 / this.objectDistance)
-    this.verticalAngle = 30
-    this.horizontalAngle = 10
+    this.verticalAngle = verticalAngle || 0
+    this.horizontalAngle = horizontalAngle || 0
     this._xAxis = new Vector3(-1, 0, 0)
     this._yAxis = new Vector3(0, -1, 0)
   }

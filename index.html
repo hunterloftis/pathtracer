@@ -34,7 +34,12 @@
     const tracer = new Tracer({
       canvas: document.getElementById('viewport'),
       scene: await scene.load(),
-      camera: new Camera({ lens: 0.040, focus: 20, position: new Vector3(-1, 13, 11) }),
+      camera: new Camera({
+        lens: 0.040,
+        focus: 13,
+        position: new Vector3(0, 6, 8),
+        verticalAngle: 25
+      }),
       bounces: 10
     })
     loop(50, () => tracer.exposeNext(), () => tracer.draw(true))
