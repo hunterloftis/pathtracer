@@ -3,27 +3,18 @@ class Tracer {
     Object.assign(this, { scene, bounces, gamma })
     this.width = canvas.width
     this.height = canvas.height
-    // TODO: Float32Array or UInt32Array?
     this.buffer = new Float32Array(this.width * this.height * 4).fill(0)
     this.context = canvas.getContext('2d')
     this.imageData = this.context.getImageData(0, 0, this.width, this.height)
-    this.pixels = this.imageData.data.fill(255)
-    this.paths = 0
+    this.pixels = this.imageData.data.fill(0)
     this._camera = camera || new Camera({ fov: 40 })
     this._black = new Vector3()
-    this._lastPixel = { x: 0, y: 0 }
-    this.context.fillStyle = '#fff'
     this._gamma = this._gamma.bind(this)
+    for (let i = 3; i < this.pixels.length; i += 4) this.pixels[i] = 255
   }
   exposeRandom() {
     const x = Math.floor(Math.random() * this.width)
     const y = Math.floor(Math.random() * this.height)
-    this.expose({ x, y })
-  }
-  exposeNext() {
-    const index = this.paths % (this.width * this.height)
-    const x = index % this.width
-    const y = Math.floor(index / this.width)
     this.expose({ x, y })
   }
   expose (pixel) {
@@ -37,12 +28,9 @@ class Tracer {
       average[i] = this.buffer[index + i] / exposures
     }
     this.pixels.set(this._mapped(average), index)
-    this.paths++
-    this._lastPixel = pixel
   }
-  draw (debug = false) {
+  draw () {
     this.context.putImageData(this.imageData, 0, 0)
-    if (debug) this.context.fillRect(0, this._lastPixel.y, this.width, 1)
   }
   _mapped (rgb) {
     // TODO: HDR tonemapping here (exposure mapping?)
