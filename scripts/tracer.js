@@ -60,7 +60,8 @@ class Tracer {
     if (!hit) return this.scene.background(ray).scaledBy(gain)
 
     const bsdf = material.bsdf(ray.direction, normal, distance)
-    return bsdf.samples.reduce(combineSamples.bind(this), bsdf.emit).scaledBy(gain)
+    const combinedLight = bsdf.samples.reduce(combineSamples.bind(this), bsdf.emit)
+    return combinedLight.scaledBy(gain)
 
     function combineSamples(totalLight, sample) {
       const sampleRay = new Ray3(hit, sample.direction)

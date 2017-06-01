@@ -74,6 +74,18 @@ class Vector3 {
     const rand = Vector3.randomInSphere
     return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)
   }
+  // http://www.rorydriscoll.com/2009/01/07/better-sampling/
+  get randomInCosHemisphere () {
+    const u1 = Math.random()
+    const u2 = Math.random()
+    const r = Math.sqrt(u1)
+    const theta = 2 * Math.PI * u2
+    const x = r * Math.cos(theta)
+    const y = r * Math.sin(theta)
+    const rand = new Vector3(x, y, Math.sqrt(Math.max(1 - u1, 0)))
+    return rand
+    // return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)  // TODO: necessary?
+  }
   get max () {
     return Math.max(this.x, this.y, this.z)
   }

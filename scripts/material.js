@@ -8,14 +8,12 @@ class Material {
     this.metal = metal || 0
     this.roughness = roughness || 0
   }
-  // TODO: take length of ray into account (and reduce energy by that amount here, instead of in bsdf - first step towards participating media / volumetric fog)
-  bsdf (direction, normal, distance) {
+  bsdf (direction, normal, length) {
     const samples = []
     const entering = direction.enters(normal)
     if (entering) {
       const dialectric = 1 - this.metal
       const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
-      const lambert = Math.max(direction.dot(normal.scaledBy(-1)), 0)
       const reflect = {
         pdf: this._schlick(direction, normal),
         direction: direction.reflected(normal).plus(rough).normalized,
@@ -27,17 +25,20 @@ class Material {
         direction: direction.refracted(normal, 1, this.refraction),
         energy: new Vector3(1, 1, 1)
       }
+      const sourceDirection = normal.randomInHemisphere
+      const lambert = Math.max(sourceDirection.dot(normal), 0)
       const diffuse = {
         pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).floor(0)).scaledBy(dialectric),
-        direction: normal.randomInHemisphere,
-        energy: this.color.lerp(this.color.scaledBy(lambert), 0.5)
+        direction: sourceDirection,
+        energy: this.color.scaledBy(lambert)
       }
       samples.push(reflect, refract, diffuse)
     }
     else {
       const exitDirection = direction.refracted(normal.scaledBy(-1), this.refraction, 1)
       if (exitDirection) {
-        const volume = Math.min((1 - this.transparency) * distance * distance, 1)
+        // TODO: more robust volumetric effects
+        const volume = Math.min((1 - this.transparency) * length * length, 1)
         const refract = {
           pdf: new Vector3(1, 1, 1),
           direction: exitDirection,
