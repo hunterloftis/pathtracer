@@ -15,6 +15,7 @@ class Material {
     if (entering) {
       const dialectric = 1 - this.metal
       const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
+      const lambert = Math.max(direction.dot(normal), 0)
       const reflect = {
         pdf: this._schlick(direction, normal),
         direction: direction.reflected(normal).plus(rough).normalized,
@@ -29,7 +30,7 @@ class Material {
       const diffuse = {
         pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).floor(0)).scaledBy(dialectric),
         direction: normal.randomInHemisphere,
-        energy: this.color
+        energy: this.color.scaledBy(lambert)
       }
       samples.push(reflect, refract, diffuse)
     }
