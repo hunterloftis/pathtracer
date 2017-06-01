@@ -43,7 +43,7 @@ class Scene {
     const y = v * 1500
     const index = (Math.floor(y) * 1500 + Math.floor(x)) * 4
     const rgb = new Vector3(this.pixels[index], this.pixels[index + 1], this.pixels[index + 2])
-    const scale = rgb.length > 441 ? 1.5 : 0.5
+    const scale = rgb.length > 441 ? 2 : 1
     return rgb.scaledBy(scale)
   }
 }
