@@ -47,7 +47,7 @@ class Tracer {
     const { hit, normal, material, distance } = this.scene.intersect(ray)
     if (!hit) return this.scene.background(ray).scaledBy(gain)
 
-    const bsdf = material.bsdf(ray.direction, normal, distance)
+    const bsdf = material.bsdf(normal, ray.direction, distance)
     const combinedLight = bsdf.samples.reduce(combineSamples.bind(this), bsdf.emit)
     return combinedLight.scaledBy(gain)
 

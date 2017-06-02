@@ -8,40 +8,40 @@ class Material {
     this.metal = metal || 0
     this.roughness = roughness || 0
   }
-  bsdf (direction, normal, length) {
+  bsdf (normal, direction, length) {
     const entering = direction.enters(normal)
     if (entering) {
       const cosWeight = direction.scaledBy(-1).dot(normal)
       const emit = this.light.scaledBy(cosWeight)
-      const reflected = this._reflect(direction, normal)
-      const refracted = this._refract(direction, normal, reflected)
+      const reflected = this._reflect(normal, direction)
+      const refracted = this._refract(normal, direction, reflected)
       const diffused = this._diffuse(normal, reflected, refracted)
       return {
         emit,
-        samples: Object.values([ reflected, refracted, diffused ])
+        samples: [ reflected, refracted, diffused ].filter(s => s.pdf.max > 0)
       }  // TODO: unify into a single array with emit
     }
     else {
       return {
         emit: new Vector3(),
-        samples: Object.values([ this.volume() ])
+        samples: [ this._volume(normal, direction, length) ].filter(s => s.pdf.max > 0)
       }
     }
   }
-  _reflect (direction, normal) {
-    const pdf = this._schlick(direction, normal)
-    if (pdf.max === 0) return
+  _reflect (normal, direction) {
+    const pdf = this._schlick(normal, direction)
+    if (pdf.max === 0) return { pdf }
     const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
     return {
       pdf,
-      direction: reflected(normal).plus(rough).normalized,
+      direction: direction.reflected(normal).plus(rough).normalized,
       energy: new Vector3(1, 1, 1)
     }
   }
-  _refract (direction, normal, reflected) {
+  _refract (normal, direction, reflected) {
     const dialectric = 1 - this.metal
     const pdf = (new Vector3(1,1,1).minus(reflected.pdf).floor(0)).scaledBy(this.transparency * dialectric)
-    if (pdf === 0) return
+    if (pdf.max === 0) return { pdf }
     const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
     return {
       pdf,
@@ -52,7 +52,7 @@ class Material {
   _diffuse (normal, reflected, refracted) {
     const dialectric = 1 - this.metal
     const pdf = (new Vector3(1,1,1).minus(reflected.pdf).minus(refracted.pdf).floor(0)).scaledBy(dialectric)
-    if (pdf.max === 0) return
+    if (pdf.max === 0) return { pdf }
     const direction = normal.randomInHemisphere
     const lambert = Math.max(direction.dot(normal), 0)
     return {
@@ -62,9 +62,9 @@ class Material {
     }
   }
   // TODO: more robust volumetric effects
-  _volume () {
+  _volume (normal, direction, length) {
     const exitDirection = direction.refracted(normal.scaledBy(-1), this.refraction, 1)
-    if (!exitDirection) return
+    if (!exitDirection) return { pdf }
     const volume = Math.min((1 - this.transparency) * length * length, 1)
     return {
       pdf: new Vector3(1, 1, 1),
