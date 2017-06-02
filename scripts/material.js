@@ -11,21 +11,26 @@ class Material {
   bsdf (normal, direction, length) {
     const entering = direction.enters(normal)
     if (entering) {
-      const cosWeight = direction.scaledBy(-1).dot(normal)
-      const emit = this.light.scaledBy(cosWeight)
+      const emitted = this._emit(normal, direction)
       const reflected = this._reflect(normal, direction)
       const refracted = this._refract(normal, direction, reflected)
       const diffused = this._diffuse(normal, reflected, refracted)
-      return {
-        emit,
-        samples: [ reflected, refracted, diffused ].filter(s => s.pdf.max > 0)
-      }  // TODO: unify into a single array with emit
+      return [ emitted, reflected, refracted, diffused ].filter(this._nonZero)
     }
     else {
-      return {
-        emit: new Vector3(),
-        samples: [ this._volume(normal, direction, length) ].filter(s => s.pdf.max > 0)
-      }
+      return [ this._volume(normal, direction, length) ].filter(this._nonZero)
+    }
+  }
+  _nonZero (sample) {
+    return sample.pdf.max > 0
+  }
+  _emit (normal, direction) {
+    const pdf = this.light.max > 0 ? new Vector3(1, 1, 1) : new Vector3(0, 0, 0)
+    if (pdf.max === 0) return { pdf }
+    const cosWeight = direction.scaledBy(-1).dot(normal)
+    return {
+      pdf,
+      light: this.light.scaledBy(cosWeight)
     }
   }
   _reflect (normal, direction) {

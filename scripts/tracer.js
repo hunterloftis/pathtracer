@@ -11,13 +11,13 @@ class Tracer {
     this._black = new Vector3()
     this._gamma = this._gamma.bind(this)
     for (let i = 3; i < this.pixels.length; i += 4) this.pixels[i] = 255
+    this._totalExposureTime = 0
+    this.exposures = 0
   }
-  exposeRandom() {
-    const x = Math.floor(Math.random() * this.width)
-    const y = Math.floor(Math.random() * this.height)
-    this.expose({ x, y })
-  }
-  expose (pixel) {
+  expose () {
+    const start = performance.now()
+    const flat = this.exposures % (this.width * this.height)
+    const pixel = { x: flat % this.width, y: Math.floor(flat / this.width) }
     const ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
     const rgb = this._trace(ray, this.bounces).array
     const index = (pixel.x + pixel.y * this.width) * 4
@@ -28,9 +28,14 @@ class Tracer {
       average[i] = this.buffer[index + i] / exposures
     }
     this.pixels.set(this._mapped(average), index)
+    this.exposures++
+    this._totalExposureTime += performance.now() - start
   }
   draw () {
     this.context.putImageData(this.imageData, 0, 0)
+  }
+  get nsPerExposure () {
+    return Math.round(this._totalExposureTime / this.exposures * 1e6)
   }
   _mapped (rgb) {
     // TODO: HDR tonemapping here (exposure mapping?)
@@ -47,11 +52,12 @@ class Tracer {
     const { hit, normal, material, distance } = this.scene.intersect(ray)
     if (!hit) return this.scene.background(ray).scaledBy(gain)
 
-    const bsdf = material.bsdf(normal, ray.direction, distance)
-    const combinedLight = bsdf.samples.reduce(combineSamples.bind(this), bsdf.emit)
+    const samples = material.bsdf(normal, ray.direction, distance)
+    const combinedLight = samples.reduce(combineSamples.bind(this), new Vector3())
     return combinedLight.scaledBy(gain)
 
     function combineSamples(totalLight, sample) {
+      if (sample.light) return totalLight.plus(sample.light)
       const sampleRay = new Ray3(hit, sample.direction)
       const sampleLight = this._trace(sampleRay, bounces - 1, sample.energy.max * strength)
       const luminosity = sample.energy.scaledBy(sample.pdf)
