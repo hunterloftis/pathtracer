@@ -3,7 +3,7 @@ class Tracer {
     Object.assign(this, { scene, bounces, gamma })
     this.width = canvas.width
     this.height = canvas.height
-    this.buffer = new Float32Array(this.width * this.height * 4).fill(0)
+    this.buffer = new Float64Array(this.width * this.height * 4).fill(0)
     this.context = canvas.getContext('2d')
     this.imageData = this.context.getImageData(0, 0, this.width, this.height)
     this.pixels = this.imageData.data.fill(0)
@@ -44,11 +44,12 @@ class Tracer {
   _gamma (brightness) {
     return Math.pow(brightness / 255, (1 / this.gamma)) * 255
   }
+
   _trace (ray, bounces, strength = 1) {
     const terminate = bounces < 0 || Math.random() > strength
     if (terminate) return this._black
-
     const gain = 1 / strength
+
     const { hit, normal, material, distance } = this.scene.intersect(ray)
     if (!hit) return this.scene.background(ray).scaledBy(gain)
 
@@ -64,4 +65,6 @@ class Tracer {
       return totalLight.plus(sampleLight.scaledBy(luminosity))
     }
   }
+
+
 }

@@ -13,9 +13,9 @@ class Material {
     if (entering) {
       const emitted = this._emit(normal, direction)
       const reflected = this._reflect(normal, direction)
-      const refracted = this._refract(normal, direction, reflected)
-      const diffused = this._diffuse(normal, reflected, refracted)
-      return [ emitted, reflected, refracted, diffused ].filter(this._nonZero)
+      const transmitted = this._transmit(normal, direction, reflected)
+      const diffused = this._diffuse(normal, reflected, transmitted)
+      return [ emitted, reflected, transmitted, diffused ].filter(this._nonZero)
     }
     else {
       return [ this._volume(normal, direction, length) ].filter(this._nonZero)
@@ -43,7 +43,7 @@ class Material {
       energy: new Vector3(1, 1, 1)
     }
   }
-  _refract (normal, direction, reflected) {
+  _transmit (normal, direction, reflected) {
     const dialectric = 1 - this.metal
     const pdf = (new Vector3(1,1,1).minus(reflected.pdf).floor(0)).scaledBy(this.transparency * dialectric)
     if (pdf.max === 0) return { pdf }
