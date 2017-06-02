@@ -9,47 +9,67 @@ class Material {
     this.roughness = roughness || 0
   }
   bsdf (direction, normal, length) {
-    const samples = []
     const entering = direction.enters(normal)
     if (entering) {
-      const dialectric = 1 - this.metal
-      const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
-      const reflect = {
-        pdf: this._schlick(direction, normal),
-        direction: direction.reflected(normal).plus(rough).normalized,
-        energy: new Vector3(1, 1, 1)
-      }
-      // TODO: add roughness to refractions so you can have things like frosted glass
-      const refract = {
-        pdf: (new Vector3(1,1,1).minus(reflect.pdf).floor(0)).scaledBy(this.transparency * dialectric),
-        direction: direction.refracted(normal, 1, this.refraction),
-        energy: new Vector3(1, 1, 1)
-      }
-      const sourceDirection = normal.randomInHemisphere
-      const lambert = Math.max(sourceDirection.dot(normal), 0)
-      const diffuse = {
-        pdf: (new Vector3(1,1,1).minus(reflect.pdf).minus(refract.pdf).floor(0)).scaledBy(dialectric),
-        direction: sourceDirection,
-        energy: this.color.scaledBy(lambert)
-      }
-      samples.push(reflect, refract, diffuse)
+      const cosWeight = direction.scaledBy(-1).dot(normal)
+      const emit = this.light.scaledBy(cosWeight)
+      const reflected = this._reflect(direction, normal)
+      const refracted = this._refract(direction, normal, reflected)
+      const diffused = this._diffuse(normal, reflected, refracted)
+      return {
+        emit,
+        samples: Object.values([ reflected, refracted, diffused ])
+      }  // TODO: unify into a single array with emit
     }
     else {
-      const exitDirection = direction.refracted(normal.scaledBy(-1), this.refraction, 1)
-      if (exitDirection) {
-        // TODO: more robust volumetric effects
-        const volume = Math.min((1 - this.transparency) * length * length, 1)
-        const refract = {
-          pdf: new Vector3(1, 1, 1),
-          direction: exitDirection,
-          energy: new Vector3(1, 1, 1).lerp(this.color, volume)
-        }
-        samples.push(refract)
+      return {
+        emit: new Vector3(),
+        samples: Object.values([ this.volume() ])
       }
     }
+  }
+  _reflect (direction, normal) {
+    const pdf = this._schlick(direction, normal)
+    if (pdf.max === 0) return
+    const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
     return {
-      samples: samples.filter(s => s.pdf.min > 0),
-      emit: this.light.scaledBy(direction.scaledBy(-1).dot(normal))
+      pdf,
+      direction: reflected(normal).plus(rough).normalized,
+      energy: new Vector3(1, 1, 1)
+    }
+  }
+  _refract (direction, normal, reflected) {
+    const dialectric = 1 - this.metal
+    const pdf = (new Vector3(1,1,1).minus(reflected.pdf).floor(0)).scaledBy(this.transparency * dialectric)
+    if (pdf === 0) return
+    const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
+    return {
+      pdf,
+      direction: direction.refracted(normal, 1, this.refraction).plus(rough).normalized,
+      energy: new Vector3(1, 1, 1)
+    }  
+  }
+  _diffuse (normal, reflected, refracted) {
+    const dialectric = 1 - this.metal
+    const pdf = (new Vector3(1,1,1).minus(reflected.pdf).minus(refracted.pdf).floor(0)).scaledBy(dialectric)
+    if (pdf.max === 0) return
+    const direction = normal.randomInHemisphere
+    const lambert = Math.max(direction.dot(normal), 0)
+    return {
+      pdf,
+      direction,
+      energy: this.color.scaledBy(lambert)
+    }
+  }
+  // TODO: more robust volumetric effects
+  _volume () {
+    const exitDirection = direction.refracted(normal.scaledBy(-1), this.refraction, 1)
+    if (!exitDirection) return
+    const volume = Math.min((1 - this.transparency) * length * length, 1)
+    return {
+      pdf: new Vector3(1, 1, 1),
+      direction: exitDirection,
+      energy: new Vector3(1, 1, 1).lerp(this.color, volume)
     }
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
