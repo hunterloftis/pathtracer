@@ -2,11 +2,14 @@ class SphereScene extends Scene {
   constructor () {
     super()
     const materials = this.materials
-    this.environment = 'images/uffizi-probe.png'
+    this.environment = 'images/stpeters-probe.png'
     this.objects = [
-      new Sphere(new Vector3(0, 1, -1), 1, materials.bluePlastic),
-      new Sphere(new Vector3(1, 1, 5), 1, materials.shinyBlack),
-      new Sphere(new Vector3(0, -1000, 0), 1000, materials.redPlastic)
+      new Sphere(new Vector3(-3.3, 1, -4.3), 1, materials.gold),
+      new Sphere(new Vector3(-1.1, 1, -5), 1, materials.bluePlastic),
+      new Sphere(new Vector3(1, 1, -5), 1, materials.silver),
+      new Sphere(new Vector3(3.2, 1, -4.6), 1, materials.greenGlass),
+      new Sphere(new Vector3(0.5, -1000, -8), 1000, materials.whiteLambert),
+      new Sphere(new Vector3(-10, 2, 0), 2, materials.brightLight)
     ]
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
