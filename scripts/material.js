@@ -12,28 +12,32 @@ class Material {
     const entering = direction.enters(normal)
     if (entering) {
       const reflect = this._schlick(normal, direction)
-      if (Math.random() <= reflect.max) {
+      // reflected
+      if (Math.random() <= reflect.max) { 
         const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
         const reflected = direction.reflected(normal).plus(rough).normalized
         return { direction: reflected, signal: this.fresnel }
       }
+      // transmitted (entering)
       if (Math.random() <= this.transparency) {
         const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
         const transmitted = direction.refracted(normal, 1, this.refraction).plus(rough).normalized
         return { direction: transmitted, signal: new Vector3(1, 1, 1) }
       }
-      if (Math.random() <= this.metal) {  // absorbed
-        return null
-      }
+      // absorbed
+      if (Math.random() <= this.metal) return null
+      // diffused
       const diffused = normal.randomInHemisphere
       const lambert = Math.max(diffused.dot(normal), 0)
       return { direction: diffused, signal: this.color.scaledBy(lambert) } 
     }
+    // transmitted (exiting)
     else {
       const exited = direction.refracted(normal.scaledBy(-1), this.refraction, 1)
       if (!exited) return null
       const volume = Math.min((1 - this.transparency) * length * length, 1)
-      return { direction: exited, signal: new Vector3(1, 1, 1).lerp(this.color, volume) }
+      const tint = new Vector3(1, 1, 1).lerp(this.color, volume)
+      return { direction: exited, signal: tint }
     }
   }
   _emit (normal, direction) {

@@ -59,7 +59,7 @@ class SphereScene extends Scene {
       }),
       greenGlass: new Material({
         refraction: 1.52,
-        transparency: 0.9,
+        transparency: 0.95,
         color: new Vector3(0, 1, 0),
         fresnel: new Vector3(0.05, 0.05, 0.05)
       }),
