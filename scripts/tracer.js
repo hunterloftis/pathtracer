@@ -16,18 +16,17 @@ class Tracer {
   }
   expose () {
     const start = performance.now()
-    const flat = this.exposures % (this.width * this.height)
-    const pixel = { x: flat % this.width, y: Math.floor(flat / this.width) }
-    const ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
-    const rgb = this._trace(ray, this.bounces).array
-    const index = (pixel.x + pixel.y * this.width) * 4
-    const exposures = ++this.buffer[index + 3]
+    const index = this.exposures % (this.width * this.height)
+    const pixel = { x: index % this.width, y: Math.floor(index / this.width) }
+    const rgb = this._trace(pixel).array
+    const rgbaIndex = (pixel.x + pixel.y * this.width) * 4
+    const exposures = ++this.buffer[rgbaIndex + 3]
     const average = new Float32Array(3)
     for (let i = 0; i < 3; i++) {
-      this.buffer[index + i] += rgb[i]
-      average[i] = this.buffer[index + i] / exposures
+      this.buffer[rgbaIndex + i] += rgb[i]
+      average[i] = this.buffer[rgbaIndex + i] / exposures
     }
-    this.pixels.set(this._mapped(average), index)
+    this.pixels.set(this._mapped(average), rgbaIndex)
     this.exposures++
     this._totalExposureTime += performance.now() - start
   }
@@ -44,26 +43,28 @@ class Tracer {
   _gamma (brightness) {
     return Math.pow(brightness / 255, (1 / this.gamma)) * 255
   }
+  _trace (pixel) {
+    let ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
+    let signal = new Vector3(1, 1, 1)
+    let energy = new Vector3(0, 0, 0)
 
-  _trace (ray, bounces, strength = 1) {
-    const terminate = bounces < 0 || Math.random() > strength
-    if (terminate) return this._black
-    const gain = 1 / strength
+    for (var bounces = 0; bounces < this.bounces; bounces++ ) {
+      const { hit, normal, material, distance } = this.scene.intersect(ray)
+      if (!hit) {
+        energy.add(this.scene.background(ray).scaledBy(signal))
+        break
+      } 
 
-    const { hit, normal, material, distance } = this.scene.intersect(ray)
-    if (!hit) return this.scene.background(ray).scaledBy(gain)
+      if (material.light) energy.add(material.light.scaledBy(signal))
+      // if (Math.random() > signal.max) break
+      // signal.scale(1 / signal.max)
 
-    const samples = material.bsdf(normal, ray.direction, distance)
-    const combinedLight = samples.reduce(combineSamples.bind(this), new Vector3())
-    return combinedLight.scaledBy(gain)
-
-    function combineSamples(totalLight, sample) {
-      if (sample.light) return totalLight.plus(sample.light)
-      const sampleRay = new Ray3(hit, sample.direction)
-      const sampleLight = this._trace(sampleRay, bounces - 1, sample.energy.max * strength)
-      const luminosity = sample.energy.scaledBy(sample.pdf)
-      return totalLight.plus(sampleLight.scaledBy(luminosity))
+      const sample = material.bsdf(normal, ray.direction, distance)
+      if (!sample) break
+      ray = new Ray3(hit, sample.direction)
+      signal = signal.scaledBy(sample.signal)
     }
+    return energy
   }
 
 

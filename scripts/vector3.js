@@ -33,6 +33,14 @@ class Vector3 {
     if (v instanceof Vector3) return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z)
     return new Vector3(this.x * v, this.y * v, this.z * v)
   }
+  scale (v) {
+    if (v instanceof Vector3) {
+      this.x *= v.x; this.y *= v.y; this.z *= v.z
+    } else {
+      this.x *= v; this.y *= v; this.z *= v
+    }
+    return this
+  }
   dividedBy (v) {
     if (v instanceof Vector3) return new Vector3(this.x / v.x, this.y / v.y, this.z / v.z)
     return new Vector3(this.x / v, this.y / v, this.z / v)
@@ -49,6 +57,10 @@ class Vector3 {
     if (k < 0) return null  // total internal reflection
     const offset = normal.scaledBy(ratio * nDotI + Math.sqrt(k))
     return this.scaledBy(ratio).minus(offset).normalized  // TODO: normalized necessary?
+  }
+  add (v) {
+    this.x += v.x; this.y += v.y; this.z += v.z
+    return this
   }
   floor (n) {
     return new Vector3(this.x < n ? n : this.x, this.y < n ? n : this.y, this.z < n ? n : this.z)

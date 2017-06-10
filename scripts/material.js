@@ -11,18 +11,30 @@ class Material {
   bsdf (normal, direction, length) {
     const entering = direction.enters(normal)
     if (entering) {
-      const emitted = this._emit(normal, direction)
-      const reflected = this._reflect(normal, direction)
-      const transmitted = this._transmit(normal, direction, reflected)
-      const diffused = this._diffuse(normal, reflected, transmitted)
-      return [ emitted, reflected, transmitted, diffused ].filter(this._nonZero)
+      const reflect = this._schlick(normal, direction)
+      if (Math.random() <= reflect.max) {
+        const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
+        const reflected = direction.reflected(normal).plus(rough).normalized
+        return { direction: reflected, signal: this.fresnel }
+      }
+      if (Math.random() <= this.transparency) {
+        const rough = Vector3.randomInSphere.scaledBy(this.roughness / 2)
+        const transmitted = direction.refracted(normal, 1, this.refraction).plus(rough).normalized
+        return { direction: transmitted, signal: new Vector3(1, 1, 1) }
+      }
+      if (Math.random() <= this.metal) {  // absorbed
+        return null
+      }
+      const diffused = normal.randomInHemisphere
+      const lambert = Math.max(diffused.dot(normal), 0)
+      return { direction: diffused, signal: this.color.scaledBy(lambert) } 
     }
     else {
-      return [ this._volume(normal, direction, length) ].filter(this._nonZero)
+      const exited = direction.refracted(normal.scaledBy(-1), this.refraction, 1)
+      if (!exited) return null
+      const volume = Math.min((1 - this.transparency) * length * length, 1)
+      return { direction: exited, signal: new Vector3(1, 1, 1).lerp(this.color, volume) }
     }
-  }
-  _nonZero (sample) {
-    return sample.pdf.max > 0
   }
   _emit (normal, direction) {
     const pdf = this.light.max > 0 ? new Vector3(1, 1, 1) : new Vector3(0, 0, 0)
