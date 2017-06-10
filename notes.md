@@ -75,3 +75,6 @@ Future work:
 - http://www.rorydriscoll.com/2009/01/07/better-sampling/
 - https://www.cs.dartmouth.edu/~wjarosz/publications/dissertation/chapter4.pdf (participating media)
 - http://www.cs.utah.edu/~boulos/ppt/ppt.pdf (phase functions)
+
+- https://computergraphics.stackexchange.com/questions/4664/does-cosine-weighted-hemisphere-sampling-still-require-ndotl-when-calculating-co
+- https://www.gamedev.net/blog/2031/entry-2261086-importance-sampling/

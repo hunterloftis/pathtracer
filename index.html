@@ -42,7 +42,12 @@
       }),
       bounces: 10
     })
-    setInterval(() => console.log(`ns / exposure: ${tracer.nsPerExposure}, exposures: ${tracer.exposures}`), 2000)
+    setInterval(() => {
+      const ns = tracer.nsPerExposure
+      const exposures = tracer.exposures
+      const perPixel = exposures / (960 * 540)
+      console.log(`ns / exposure: ${ns}, exposures: ${exposures}, per pixel: ${perPixel}`)
+    }, 2000)
     loop(50, () => tracer.expose(), () => tracer.draw())
   }
   

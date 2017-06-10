@@ -87,16 +87,32 @@ class Vector3 {
     return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)
   }
   // http://www.rorydriscoll.com/2009/01/07/better-sampling/
+  // https://cseweb.ucsd.edu/classes/sp17/cse168-a/CSE168_08_PathTracing.pdf
+  // https://github.com/fogleman/pt/blob/69e74a07b0af72f1601c64120a866d9a5f432e2f/pt/ray.go#L28
   get randomInCosHemisphere () {
-    const u1 = Math.random()
-    const u2 = Math.random()
-    const r = Math.sqrt(u1)
-    const theta = 2 * Math.PI * u2
-    const x = r * Math.cos(theta)
-    const y = r * Math.sin(theta)
-    const rand = new Vector3(x, y, Math.sqrt(Math.max(1 - u1, 0)))
-    return rand
-    // return this.dot(rand) > 0 ? rand : rand.scaledBy(-1)  // TODO: necessary?
+    const u = Math.random()
+    const v = Math.random()
+    const r = Math.sqrt(u)
+    const theta = 2 * Math.PI * v
+    const s = this.cross(Vector3.randomInSphere).normalized
+    const t = this.cross(s)
+    const d = new Vector3()
+    d.add(s.scaledBy(r * Math.cos(theta)))
+    d.add(t.scaledBy(r * Math.sin(theta)))
+    d.add(this.scaledBy(Math.sqrt(1 - u)))
+    return d
+  }
+  // https://stackoverflow.com/questions/17083173/sampling-a-hemisphere-using-an-arbitary-distribtuion
+  // https://computergraphics.stackexchange.com/questions/2431/role-of-pdf-of-uniform-random-sampling-in-a-path-tracer
+  randomInCone (theta) {
+    const X1 = Math.random()
+    const X2 = Math.random()
+    const phi = 2 * Math.PI * X1
+    const alpha = Math.acos(1 - (1 - Math.cos(theta)) * X2)
+    const x = Math.sin(alpha) * Math.cos(phi)
+    const y = Math.sin(alpha) * sin * phi
+    const z = -Math.cos(alpha)
+    return new Vector3(x, y, z)
   }
   get max () {
     return Math.max(this.x, this.y, this.z)

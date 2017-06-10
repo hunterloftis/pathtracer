@@ -8,6 +8,10 @@ class Material {
     this.metal = metal || 0
     this.roughness = roughness || 0
   }
+  emit (normal, direction) {
+    const cos = Math.max(normal.dot(direction.scaledBy(-1)), 0)
+    return this.light.scaledBy(cos)
+  }
   bsdf (normal, direction, length) {
     const entering = direction.enters(normal)
     if (entering) {
@@ -27,9 +31,11 @@ class Material {
       // absorbed
       if (Math.random() <= this.metal) return null
       // diffused
-      const diffused = normal.randomInHemisphere
-      const lambert = Math.max(diffused.dot(normal), 0)
-      return { direction: diffused, signal: this.color.scaledBy(lambert) } 
+      // const diffused = normal.randomInHemisphere
+      // const lambert = Math.max(diffused.dot(normal), 0)
+      // return { direction: diffused, signal: this.color.scaledBy(lambert) } 
+      const diffused = normal.randomInCosHemisphere
+      return { direction: diffused, signal: this.color.scaledBy(1 / Math.PI) } 
     }
     // transmitted (exiting)
     else {

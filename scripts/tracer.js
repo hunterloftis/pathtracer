@@ -54,13 +54,17 @@ class Tracer {
         energy.add(this.scene.background(ray).scaledBy(signal))
         break
       } 
-
-      if (material.light) energy.add(material.light.scaledBy(signal))
-      if (Math.random() > signal.max) break
+      if (material.light) {
+        energy.add(material.emit(normal, ray.direction).scaledBy(signal))
+      }
+      if (Math.random() > signal.max) {
+        break
+      }
       signal.scale(1 / signal.max)
-
       const sample = material.bsdf(normal, ray.direction, distance)
-      if (!sample) break
+      if (!sample) {
+        break
+      }
       ray = new Ray3(hit, sample.direction)
       signal = signal.scaledBy(sample.signal)
     }
