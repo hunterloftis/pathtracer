@@ -56,8 +56,8 @@ class Tracer {
       } 
 
       if (material.light) energy.add(material.light.scaledBy(signal))
-      // if (Math.random() > signal.max) break
-      // signal.scale(1 / signal.max)
+      if (Math.random() > signal.max) break
+      signal.scale(1 / signal.max)
 
       const sample = material.bsdf(normal, ray.direction, distance)
       if (!sample) break
