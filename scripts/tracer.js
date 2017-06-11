@@ -20,28 +20,32 @@ class Tracer {
   expose () {
     const start = performance.now()
     const pixel = this._pixelForIndex(this._index)
-    const average = this._averageAt(pixel)
     const rgbaIndex = (pixel.x + pixel.y * this.width) * 4
-    for (let samples = 0; samples < this.maxSamples; samples++) {
+    const limit = Math.ceil(this._index / (this.width * this.height) + 1)
+    const first = this._averageAt(pixel)
+    let last = first
+    for (let samples = 0; samples < limit; samples++) {
       const light = this._trace(pixel)
       const rgb = light.array
-      const exposures = ++this.buffer[rgbaIndex + 3]
+      const noise = (light.minus(last).length + light.minus(first).length) / 512
+      last = light
       for (let i = 0; i < 3; i++) {
         this.buffer[rgbaIndex + i] += rgb[i]
       }
+      this.buffer[rgbaIndex + 3]++
       this.exposures++
-      if (light.minus(average).length < this.noiseThreshold || exposures === 1) {
-        break
-      }
+      if (noise < 0.05) break
     }
     this._colorPixel(pixel)
     this._index++
     this._totalExposureTime += performance.now() - start
   }
   _colorPixel(pixel) {
-    const average = this._averageAt(pixel)
-    const color = average.array.map(this._gamma)
+    // const average = this._averageAt(pixel)
+    // const color = average.array.map(this._gamma)
     const index = (pixel.x + pixel.y * this.width) * 4
+    const exp = this.buffer[index + 3] * 3
+    const color = [exp, exp, exp]
     this.pixels.set(color, index)
   }
   _averageAt(pixel) {
@@ -80,16 +84,14 @@ class Tracer {
     for (var bounces = 0; bounces < this.bounces; bounces++ ) {
       const { hit, normal, material, distance } = this.scene.intersect(ray)
       if (!hit) {
-        energy.add(this.scene.background(ray).scaledBy(signal))
+        energy.add(this.scene.bg(ray).scaledBy(signal))
         break
       } 
-      if (material.light) {
-        energy.add(material.emit(normal, ray.direction).scaledBy(signal))
-      }
-      if (Math.random() > signal.max) {
+      const light = material.emit(normal, ray.direction)
+      if (light) energy.add(light.scaledBy(signal))
+      if (signal.dies(signal.max)) {
         break
       }
-      signal = signal.scaledBy(1 / signal.max)
       const sample = material.bsdf(normal, ray.direction, distance)
       if (!sample) {
         break

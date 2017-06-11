@@ -33,7 +33,7 @@ class Scene {
       })
     })
   }
-  background (ray) {
+  bg (ray) {
     if (!this.environment) return this._black
     const d = Math.sqrt(ray.direction.x * ray.direction.x + ray.direction.y * ray.direction.y)
     const r = 0.159154943 * Math.acos(ray.direction.z) / d

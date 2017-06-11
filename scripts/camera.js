@@ -14,6 +14,7 @@ class Camera {
     this._yAxis = new Vector3(0, -1, 0)
 
   }
+  // TODO: optimize (22% of total time)
   ray (x, y, width, height) {
     const sensorPoint = this._sensorPoint(x, y, width, height)
     const focusPoint = this._focusPoint(sensorPoint)

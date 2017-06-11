@@ -58,6 +58,11 @@ class Vector3 {
   enters (normal) {
     return normal.dot(this) < 0
   }
+  dies (chance) {
+    if (Math.random() > chance) return true
+    this.x /= chance; this.y /= chance; this.z /= chance
+    return false
+  }
   get length () {
     return Math.sqrt(this.dot(this))
   }

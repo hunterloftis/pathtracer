@@ -9,6 +9,7 @@ class Material {
     this.gloss = gloss || 0
   }
   emit (normal, direction) {
+    if (this.light.max === 0) return null
     const cos = Math.max(normal.dot(direction.scaledBy(-1)), 0)
     return this.light.scaledBy(cos)
   }
