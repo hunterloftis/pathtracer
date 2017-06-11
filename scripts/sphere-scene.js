@@ -18,42 +18,43 @@ class SphereScene extends Scene {
       whiteLambert: new Material({
         color: new Vector3(1, 1, 1),
         fresnel: new Vector3(0.04, 0.04, 0.04),
-        roughness: 1
+        gloss: 0
       }),
       shinyBlack: new Material({
         color: new Vector3(0, 0, 0),
         fresnel: new Vector3(0.04, 0.04, 0.04),
-        roughness: 0.1
+        gloss: 0.9
       }),
       bluePlastic: new Material({
         color: new Vector3(0.1, 0.1, 1),
         fresnel: new Vector3(0.04, 0.04, 0.04),
-        roughness: 0.8
+        gloss: 0.2
       }),
       redPlastic: new Material({
         color: new Vector3(1, 0, 0),
         fresnel: new Vector3(0.04, 0.04, 0.04),
-        roughness: 0.8
+        gloss: 0.2
       }),
       gold: new Material({
         fresnel: new Vector3(1.022, 0.782, 0.344),
         color: new Vector3(0, 0, 0),
         metal: 1,
-        roughness: 0.3
+        gloss: 0.7
       }),
       copper: new Material({
         fresnel: new Vector3(0.955,0.638,0.538),
         metal: 0.9,
-        roughness: 0
+        gloss: 1
       }),
       silver: new Material({
-        fresnel: new Vector3(0.972,0.960,0.915),
-        color: new Vector3(0.972,0.960,0.915),
+        fresnel: new Vector3(0.972, 0.960, 0.915),
+        color: new Vector3(0.972, 0.960, 0.915),
         metal: 0.9,
-        roughness: 0
+        gloss: 1
       }),
       glass: new Material({
         refraction: 1.6,
+        opacity: 0,
         transparency: 1,
         fresnel: new Vector3(0.04, 0.04, 0.04)
       }),
@@ -62,12 +63,6 @@ class SphereScene extends Scene {
         transparency: 0.95,
         color: new Vector3(0, 1, 0),
         fresnel: new Vector3(0.05, 0.05, 0.05)
-      }),
-      glowPlastic: new Material({
-        fresnel: new Vector3(0.04, 0.04, 0.04),
-        roughness: 0.3,
-        light: new Vector3(3000, 3000, 3000),
-        transparency: new Vector3(0.4, 0.4, 0.4)
       }),
       brightLight: new Material({
         light: new Vector3(10000, 10000, 10000)
