@@ -15,7 +15,7 @@ class SphereScene extends Scene {
       new Sphere(new Vector3(0, 0, -1010), 1000, materials.whiteLambert),
       new Sphere(new Vector3(0, 13, -8), 10.5, materials.brightLight),
       new Sphere(new Vector3(1, -2, -7), 1, materials.silver),
-      new Sphere(new Vector3(-1, -2, -5), 1, materials.glass)
+      new Sphere(new Vector3(-0.75, -2, -5), 1, materials.glass)
     ]
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
@@ -72,7 +72,9 @@ class SphereScene extends Scene {
         fresnel: new Vector3(0.05, 0.05, 0.05)
       }),
       brightLight: new Material({
-        light: new Vector3(10000, 10000, 10000)
+        light: new Vector3(3000, 3000, 3000),
+        transparency: 1,
+        fresnel: new Vector3(0, 0, 0)
       })
     }
   }

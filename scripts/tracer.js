@@ -23,12 +23,12 @@ class Tracer {
     const rgbaIndex = (pixel.x + pixel.y * this.width) * 4
     const limit = Math.ceil(this._index / (this.width * this.height) + 1)
     const first = this._averageAt(pixel)
-    let last = first
+    let last = first.ave
     for (let samples = 0; samples < limit; samples++) {
       const light = this._trace(pixel)
       const rgb = light.array
-      const noise = (Math.abs(light.ave - last.ave) + Math.abs(light.ave - first.ave)) / 512
-      last = light
+      const noise = Math.abs(light.ave - last) / (last + 1e-6)
+      last = light.ave
       for (let i = 0; i < 3; i++) {
         this.buffer[rgbaIndex + i] += rgb[i]
       }
