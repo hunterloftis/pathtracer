@@ -41,11 +41,11 @@ class Tracer {
     this._totalExposureTime += performance.now() - start
   }
   _colorPixel(pixel) {
-    const average = this._averageAt(pixel)
-    const color = average.array.map(this._gamma)
     const index = (pixel.x + pixel.y * this.width) * 4
-    // const exp = this.buffer[index + 3] * 3
-    // const color = [exp, exp, exp]
+    // const average = this._averageAt(pixel)
+    // const color = average.array.map(this._gamma)
+    const exp = this.buffer[index + 3] * 3
+    const color = [exp, exp, exp]
     this.pixels.set(color, index)
   }
   _averageAt(pixel) {

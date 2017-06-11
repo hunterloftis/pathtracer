@@ -78,3 +78,5 @@ Future work:
 
 - https://computergraphics.stackexchange.com/questions/4664/does-cosine-weighted-hemisphere-sampling-still-require-ndotl-when-calculating-co
 - https://www.gamedev.net/blog/2031/entry-2261086-importance-sampling/
+
+- http://planetpixelemporium.com/tutorialpages/light.html
