@@ -27,25 +27,25 @@ class Tracer {
     for (let samples = 0; samples < limit; samples++) {
       const light = this._trace(pixel)
       const rgb = light.array
-      const noise = (light.minus(last).length + light.minus(first).length) / 512
+      const noise = (Math.abs(light.ave - last.ave) + Math.abs(light.ave - first.ave)) / 512
       last = light
       for (let i = 0; i < 3; i++) {
         this.buffer[rgbaIndex + i] += rgb[i]
       }
       this.buffer[rgbaIndex + 3]++
       this.exposures++
-      if (noise < 0.05) break
+      if (noise < 0.1) break
     }
     this._colorPixel(pixel)
     this._index++
     this._totalExposureTime += performance.now() - start
   }
   _colorPixel(pixel) {
-    // const average = this._averageAt(pixel)
-    // const color = average.array.map(this._gamma)
+    const average = this._averageAt(pixel)
+    const color = average.array.map(this._gamma)
     const index = (pixel.x + pixel.y * this.width) * 4
-    const exp = this.buffer[index + 3] * 3
-    const color = [exp, exp, exp]
+    // const exp = this.buffer[index + 3] * 3
+    // const color = [exp, exp, exp]
     this.pixels.set(color, index)
   }
   _averageAt(pixel) {
