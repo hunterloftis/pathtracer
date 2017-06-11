@@ -9,18 +9,19 @@
     align-items: center;
     justify-content: center;
   }
-  #viewport {
+  #view {
     box-shadow: 3px 3px 100px #000
   }
   
   </style>
 </head>
 <body>
-  <canvas id='viewport' width='960' height='540' style='background: #000;'></canvas>
+  <canvas id='view' width='960' height='540' style='background: #000;'></canvas>
   <script src='scripts/loop.js'></script>
   <script src='scripts/vector3.js'></script>
   <script src='scripts/ray3.js'></script>
   <script src='scripts/tracer.js'></script>
+  <script src='scripts/canvas-renderer.js'></script>
   <script src='scripts/camera.js'></script>
   <script src='scripts/material.js'></script>
   <script src='scripts/sphere.js'></script>
@@ -28,28 +29,13 @@
   <script src='scripts/sphere-scene.js'></script>
   <script>
 
-  main()
-  async function main () {
-    const scene = new SphereScene()
-    const tracer = new Tracer({
-      canvas: document.getElementById('viewport'),
-      scene: await scene.load(),
-      camera: new Camera({
-        lens: 0.040,
-        focus: 15,
-        position: new Vector3(0, 0, 7),
-        verticalAngle: 0
-      }),
-      bounces: 10
-    })
-    setInterval(() => {
-      const ns = tracer.nsPerExposure
-      const exposures = tracer.exposures
-      const perPixel = exposures / (960 * 540)
-      console.log(`ns / exposure: ${ns}, exposures: ${exposures}, per pixel: ${perPixel}`)
-    }, 2000)
-    loop(50, () => tracer.expose(), () => tracer.draw())
-  }
+  const view = document.getElementById('view')
+  const scene = new SphereScene()
+  const camera = new Camera({ lens: 0.040, focus: 15, position: new Vector3(0, 0, 7), verticalAngle: 0 })
+  const tracer = new Tracer({ canvas: view, scene, camera, width: view.width, height: view.height, bounces: 10, debug: 3000 })
+  const renderer = new CanvasRenderer(tracer, view)
+
+  scene.load().then(() => tracer.start())
   
   </script>
 </body>

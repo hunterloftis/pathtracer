@@ -1,11 +1,8 @@
 class Tracer {
-  constructor ({ canvas, scene, bounces, camera, gamma = 2.2}) {
-    Object.assign(this, { scene, bounces, gamma })
-    this.width = canvas.width
-    this.height = canvas.height
+  constructor ({ canvas, scene, camera, width=320, height=240, bounces=10, gamma = 2.2, debug = 0}) {
+    Object.assign(this, { scene, bounces, gamma, width, height, debug })
     this.buffer = new Float64Array(this.width * this.height * 4).fill(0)
-    this.context = canvas.getContext('2d')
-    this.imageData = this.context.getImageData(0, 0, this.width, this.height)
+    this.imageData = canvas.getContext('2d').getImageData(0, 0, this.width, this.height)  // TODO: replace with a new non-DOM-based imageData
     this.pixels = this.imageData.data.fill(0)
     this.exposures = 0
     this.maxSamples = 16
@@ -16,8 +13,30 @@ class Tracer {
     for (let i = 3; i < this.pixels.length; i += 4) this.pixels[i] = 255
     this._totalExposureTime = 0
     this._index = 0
+    this._debug = this._debug.bind(this)
+    this._update = this._update.bind(this)
   }
-  expose () {
+  start (time = 500) {
+    if (this.debug > 0) setInterval(this._debug, this.debug)
+    this._update()
+  }
+  getData () {
+    return this.imageData
+  }
+  _update (time) {
+    const end = performance.now() + time
+    do {
+      this._expose()
+    } while (performance.now() < end)
+    setTimeout(this._update, 0)
+  }
+  _debug () {
+    const seconds = this._totalExposureTime / 1000
+    const nspt = Math.floor(this._totalExposureTime / this.exposures * 1000000)
+    const tpp = Math.round(this.exposures / (this.width * this.height))
+    console.log(`${seconds}s, ${nspt}ns/trace, ${tpp} traces/pixel`)
+  }
+  _expose () {
     const start = performance.now()
     const pixel = this._pixelForIndex(this._index)
     const rgbaIndex = (pixel.x + pixel.y * this.width) * 4
@@ -42,10 +61,10 @@ class Tracer {
   }
   _colorPixel(pixel) {
     const index = (pixel.x + pixel.y * this.width) * 4
-    // const average = this._averageAt(pixel)
-    // const color = average.array.map(this._gamma)
-    const exp = this.buffer[index + 3] * 3
-    const color = [exp, exp, exp]
+    const average = this._averageAt(pixel)
+    const color = average.array.map(this._gamma)
+    // const exp = this.buffer[index + 3] * 3
+    // const color = [exp, exp, exp]
     this.pixels.set(color, index)
   }
   _averageAt(pixel) {
@@ -57,21 +76,9 @@ class Tracer {
     const exposures = this.buffer[index + 3]
     return new Vector3(...rgb).scaledBy(1 / exposures)
   }
-  _colorAt(pixel, dx = 0, dy = 0) {
-    const x = pixel.x + dx
-    const y = pixel.y + dy
-    const index = (x + y * this.width) * 4
-    return new Vector3(...this.pixels.slice(index, index + 3))
-  }
   _pixelForIndex(index) {
     const wrapped = index % (this.width * this.height)
     return { x: wrapped % this.width, y: Math.floor(wrapped / this.width) }
-  }
-  draw () {
-    this.context.putImageData(this.imageData, 0, 0)
-  }
-  get nsPerExposure () {
-    return Math.round(this._totalExposureTime / this.exposures * 1e6)
   }
   _gamma (brightness) {
     return Math.pow(brightness / 255, (1 / this.gamma)) * 255
@@ -101,6 +108,4 @@ class Tracer {
     }
     return energy
   }
-
-
 }
