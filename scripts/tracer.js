@@ -89,7 +89,7 @@ class Tracer {
       if (Math.random() > signal.max) {
         break
       }
-      signal.scale(1 / signal.max)
+      signal = signal.scaledBy(1 / signal.max)
       const sample = material.bsdf(normal, ray.direction, distance)
       if (!sample) {
         break

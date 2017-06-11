@@ -33,18 +33,6 @@ class Vector3 {
     if (v instanceof Vector3) return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z)
     return new Vector3(this.x * v, this.y * v, this.z * v)
   }
-  scale (v) {
-    if (v instanceof Vector3) {
-      this.x *= v.x; this.y *= v.y; this.z *= v.z
-    } else {
-      this.x *= v; this.y *= v; this.z *= v
-    }
-    return this
-  }
-  dividedBy (v) {
-    if (v instanceof Vector3) return new Vector3(this.x / v.x, this.y / v.y, this.z / v.z)
-    return new Vector3(this.x / v, this.y / v, this.z / v)
-  }
   reflected (normal) {
     const cos = normal.dot(this)
     return this.minus(normal.scaledBy(2 * cos)).normalized  // TODO: normalized necessary?
@@ -62,9 +50,6 @@ class Vector3 {
     this.x += v.x; this.y += v.y; this.z += v.z
     return this
   }
-  floor (n) {
-    return new Vector3(this.x < n ? n : this.x, this.y < n ? n : this.y, this.z < n ? n : this.z)
-  }
   lerp (v, n) {
     const m = 1 - n
     return new Vector3(this.x * m + v.x * n, this.y * m + v.y * n, this.z * m + v.z * n)
@@ -80,7 +65,7 @@ class Vector3 {
     return [this.x, this.y, this.z]
   }
   get normalized () {
-    return this.dividedBy(this.length)
+    return this.scaledBy(1 / this.length)
   }
   get randomInHemisphere () {
     const rand = Vector3.randomInSphere
