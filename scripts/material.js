@@ -6,7 +6,7 @@ class Material {
     this.light = light || new Vector3(0, 0, 0)
     this.fresnel = fresnel || new Vector3(0.04, 0.04, 0.04)
     this.metal = metal || 0
-    this.gloss = gloss || 1
+    this.gloss = gloss || 0
   }
   emit (normal, direction) {
     const cos = Math.max(normal.dot(direction.scaledBy(-1)), 0)
@@ -19,16 +19,14 @@ class Material {
       const roughness = 1 - this.gloss
       // reflected
       if (Math.random() <= reflect.ave) { 
-        const rough = Vector3.randomInSphere.scaledBy(roughness / 2)
-        const reflected = direction.reflected(normal).plus(rough).normalized
+        const reflected = direction.reflected(normal).randomInCone(roughness)
         const tint = new Vector3(1, 1, 1).lerp(this.fresnel, this.metal)
         // TODO: how to change color of reflections based on fresnel (gold?)
         return { direction: reflected, signal: tint }
       }
       // transmitted (entering)
       if (Math.random() <= this.transparency) {
-        const rough = Vector3.randomInSphere.scaledBy(roughness / 2)
-        const transmitted = direction.refracted(normal, 1, this.refraction).plus(rough).normalized
+        const transmitted = direction.refracted(normal, 1, this.refraction).randomInCone(roughness)
         return { direction: transmitted, signal: new Vector3(1, 1, 1) }
       }
       // absorbed

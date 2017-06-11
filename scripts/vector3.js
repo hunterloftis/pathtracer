@@ -104,15 +104,23 @@ class Vector3 {
   }
   // https://stackoverflow.com/questions/17083173/sampling-a-hemisphere-using-an-arbitary-distribtuion
   // https://computergraphics.stackexchange.com/questions/2431/role-of-pdf-of-uniform-random-sampling-in-a-path-tracer
-  randomInCone (theta) {
-    const X1 = Math.random()
-    const X2 = Math.random()
-    const phi = 2 * Math.PI * X1
-    const alpha = Math.acos(1 - (1 - Math.cos(theta)) * X2)
-    const x = Math.sin(alpha) * Math.cos(phi)
-    const y = Math.sin(alpha) * sin * phi
-    const z = -Math.cos(alpha)
-    return new Vector3(x, y, z)
+  // https://github.com/fogleman/pt/blob/69e74a07b0af72f1601c64120a866d9a5f432e2f/pt/util.go#L24
+  // width is 0-1
+  randomInCone (width) {
+    const u = Math.random()
+    const v = Math.random()
+    const theta = width * 0.5 * Math.PI * (1 - (2 * Math.acos(u) / Math.PI))
+    const m1 = Math.sin(theta)
+    const m2 = Math.cos(theta)
+    const a = v * 2 * Math.PI
+    const q = Vector3.randomInSphere
+    const s = this.cross(q)
+    const t = this.cross(s)
+    const d = new Vector3()
+    d.add(s.scaledBy(m1 * Math.cos(a)))
+    d.add(t.scaledBy(m1 * Math.sin(a)))
+    d.add(this.scaledBy(m2))
+    return d.normalized
   }
   get max () {
     return Math.max(this.x, this.y, this.z)

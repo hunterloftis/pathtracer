@@ -17,7 +17,7 @@ class SphereScene extends Scene {
     return {
       whiteLambert: new Material({
         color: new Vector3(1, 1, 1),
-        fresnel: new Vector3(0.04, 0.04, 0.04),
+        fresnel: new Vector3(0.03, 0.03, 0.03),
         gloss: 0
       }),
       shinyBlack: new Material({
@@ -61,6 +61,7 @@ class SphereScene extends Scene {
       greenGlass: new Material({
         refraction: 1.52,
         transparency: 0.95,
+        gloss: 1,
         color: new Vector3(0, 1, 0),
         fresnel: new Vector3(0.05, 0.05, 0.05)
       }),
