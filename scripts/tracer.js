@@ -7,38 +7,67 @@ class Tracer {
     this.context = canvas.getContext('2d')
     this.imageData = this.context.getImageData(0, 0, this.width, this.height)
     this.pixels = this.imageData.data.fill(0)
+    this.exposures = 0
+    this.maxSamples = 16
+    this.noiseThreshold = 32
     this._camera = camera || new Camera({ fov: 40 })
     this._black = new Vector3()
     this._gamma = this._gamma.bind(this)
     for (let i = 3; i < this.pixels.length; i += 4) this.pixels[i] = 255
     this._totalExposureTime = 0
-    this.exposures = 0
+    this._index = 0
   }
   expose () {
     const start = performance.now()
-    const index = this.exposures % (this.width * this.height)
-    const pixel = { x: index % this.width, y: Math.floor(index / this.width) }
-    const rgb = this._trace(pixel).array
+    const pixel = this._pixelForIndex(this._index)
+    const average = this._averageAt(pixel)
     const rgbaIndex = (pixel.x + pixel.y * this.width) * 4
-    const exposures = ++this.buffer[rgbaIndex + 3]
-    const average = new Float32Array(3)
-    for (let i = 0; i < 3; i++) {
-      this.buffer[rgbaIndex + i] += rgb[i]
-      average[i] = this.buffer[rgbaIndex + i] / exposures
+    for (let samples = 0; samples < this.maxSamples; samples++) {
+      const light = this._trace(pixel)
+      const rgb = light.array
+      const exposures = ++this.buffer[rgbaIndex + 3]
+      for (let i = 0; i < 3; i++) {
+        this.buffer[rgbaIndex + i] += rgb[i]
+      }
+      this.exposures++
+      if (light.minus(average).length < this.noiseThreshold || exposures === 1) {
+        break
+      }
     }
-    this.pixels.set(this._mapped(average), rgbaIndex)
-    this.exposures++
+    this._colorPixel(pixel)
+    this._index++
     this._totalExposureTime += performance.now() - start
+  }
+  _colorPixel(pixel) {
+    const average = this._averageAt(pixel)
+    const color = average.array.map(this._gamma)
+    const index = (pixel.x + pixel.y * this.width) * 4
+    this.pixels.set(color, index)
+  }
+  _averageAt(pixel) {
+    if (pixel.x < 0 || pixel.x >= this.width || pixel.y < 0 || pixel.y >= this.height) {
+      return null
+    }
+    const index = (pixel.x + pixel.y * this.width) * 4
+    const rgb = this.buffer.slice(index, index + 3)
+    const exposures = this.buffer[index + 3]
+    return new Vector3(...rgb).scaledBy(1 / exposures)
+  }
+  _colorAt(pixel, dx = 0, dy = 0) {
+    const x = pixel.x + dx
+    const y = pixel.y + dy
+    const index = (x + y * this.width) * 4
+    return new Vector3(...this.pixels.slice(index, index + 3))
+  }
+  _pixelForIndex(index) {
+    const wrapped = index % (this.width * this.height)
+    return { x: wrapped % this.width, y: Math.floor(wrapped / this.width) }
   }
   draw () {
     this.context.putImageData(this.imageData, 0, 0)
   }
   get nsPerExposure () {
     return Math.round(this._totalExposureTime / this.exposures * 1e6)
-  }
-  _mapped (rgb) {
-    // TODO: HDR tonemapping here (exposure mapping?)
-    return rgb.map(this._gamma)
   }
   _gamma (brightness) {
     return Math.pow(brightness / 255, (1 / this.gamma)) * 255

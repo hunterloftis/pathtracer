@@ -18,10 +18,12 @@ class Material {
       const reflect = this._schlick(normal, direction)
       const roughness = 1 - this.gloss
       // reflected
-      if (Math.random() <= reflect.max) { 
+      if (Math.random() <= reflect.ave) { 
         const rough = Vector3.randomInSphere.scaledBy(roughness / 2)
         const reflected = direction.reflected(normal).plus(rough).normalized
-        return { direction: reflected, signal: this.fresnel }
+        const tint = new Vector3(1, 1, 1).lerp(this.fresnel, this.metal)
+        // TODO: how to change color of reflections based on fresnel (gold?)
+        return { direction: reflected, signal: tint }
       }
       // transmitted (entering)
       if (Math.random() <= this.transparency) {

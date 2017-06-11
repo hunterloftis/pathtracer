@@ -120,6 +120,9 @@ class Vector3 {
   get min () {
     return Math.min(this.x, this.y, this.z)
   }
+  get ave () {
+    return (this.x + this.y + this.z) / 3
+  }
   static fromAngles (theta, phi) {
     return new Vector3(Math.cos(theta) * Math.cos(phi), Math.sin(phi), Math.sin(theta) * Math.cos(phi))
   }
