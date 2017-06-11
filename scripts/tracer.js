@@ -16,19 +16,19 @@ class Tracer {
     this._debug = this._debug.bind(this)
     this._update = this._update.bind(this)
   }
-  start (time = 500) {
+  start () {
     if (this.debug > 0) setInterval(this._debug, this.debug)
     this._update()
   }
   getData () {
-    return this.imageData
+    return this.imageData.data
   }
-  _update (time) {
-    const end = performance.now() + time
+  _update () {
+    const end = performance.now() + 50
     do {
       this._expose()
     } while (performance.now() < end)
-    setTimeout(this._update, 0)
+    requestAnimationFrame(this._update)
   }
   _debug () {
     const seconds = this._totalExposureTime / 1000
