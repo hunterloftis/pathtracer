@@ -1,11 +1,11 @@
 class FirstScene extends Scene {
-  _create() {
+  constructor () {
+    super()
     const light = new Material({
-      color: new Vector3(255, 255, 255),
-      light: 1
+      light: new Vector3(3000, 3000, 3000),
+      transparency: 1,
+      fresnel: new Vector3(0, 0, 0)
     })
-    return [
-      new Sphere(new Vector3(0, 0, -5), 1, light)
-    ]
+    this.objects = [ new Sphere(new Vector3(0, 0, -5), 1, light) ]
   }
 }
