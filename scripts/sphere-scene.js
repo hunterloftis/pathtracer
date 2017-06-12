@@ -9,7 +9,7 @@ class SphereScene extends Scene {
       new Sphere(new Vector3(1, 1, -5), 1, materials.silver),
       new Sphere(new Vector3(3.2, 1, -4.6), 1, materials.greenGlass),
       new Sphere(new Vector3(0.5, -1000, -8), 1000, materials.whiteLambert),
-      new Sphere(new Vector3(-10, 2, 0), 2, materials.brightLight)
+      new Sphere(new Vector3(-8, 3, -1), 2, materials.brightLight)
     ]
     this.camera = new Camera({ lens: 0.055, focus: 14, position: new Vector3(0, 6, 8), verticalAngle: 25 })
   }

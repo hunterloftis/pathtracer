@@ -1,22 +1,39 @@
+Add to pres:
+
+- noise & convergence
+- importance sampling (cosine weighted hemi) / pdf / conservation of energy
+
 Best:
 
+- https://www.youtube.com/watch?v=XbuEYcFfl6s
 - https://www.marmoset.co/posts/basic-theory-of-physically-based-rendering/ (overview of PBR)
 - https://www.cs.dartmouth.edu/~wjarosz/publications/dissertation/chapter4.pdf (participating media)
 - http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf (reflections & refractions)
 - http://web.cs.wpi.edu/~emmanuel/courses/cs563/write_ups/zackw/realistic_raytracing.html (historical overview of ray tracing => path tracing, rendering equation)
 - http://www.iquilezles.org/www/articles/simplepathtracing/simplepathtracing.htm (super scrappy and pragmatic walkthrough)
 - http://www.rorydriscoll.com/2009/01/07/better-sampling/
+- http://graphics.stanford.edu/papers/veach_thesis/
 
 Future work:
 
+- http://www.smallupbp.com/ (awesome renderer!)
+- http://slideplayer.com/slide/8062171/
+- http://planetpixelemporium.com/tutorialpages/light.html
+- http://www.cs.cornell.edu/courses/cs6630/2012sp/notes/09volpath.pdf (4.2)
+- http://luthuli.cs.uiuc.edu/~daf/courses/CS-419/Week-6/complexpaths2012.pdf (bidirectional)
+- http://old.cescg.org/CESCG-2008/papers/Bonn-Rump-Martin.pdf (more involved brdf)
+- http://www.cs.cornell.edu/courses/cs6630/2012sp/notes/09volpath.pdf (volumes)
+- http://cgg.unibe.ch/teaching/previous-courses/fruhlingssemester-2010/rendering-algorithms/09%20Participating%20Media%20and%20Subsurface%20Scattering.pdf
+- http://users.csc.calpoly.edu/~zwood/teaching/csc473/final13/kubayuba/
+- http://www.cs.cornell.edu/courses/cs6630/2012sp/nori/studentimages/chess.jpg
 - https://www.cs.dartmouth.edu/~wjarosz/publications/dissertation/chapter4.pdf (participating media)
 - http://www.cs.utah.edu/~boulos/ppt/ppt.pdf (phase functions)
-- https://computergraphics.stackexchange.com/questions/4664/does-cosine-weighted-hemisphere-sampling-still-require-ndotl-when-calculating-co
-- https://www.gamedev.net/blog/2031/entry-2261086-importance-sampling/
 - http://planetpixelemporium.com/tutorialpages/light.html
 
 All references:
 
+- https://computergraphics.stackexchange.com/questions/4664/does-cosine-weighted-hemisphere-sampling-still-require-ndotl-when-calculating-co
+- https://www.gamedev.net/blog/2031/entry-2261086-importance-sampling/
 - http://blog.demofox.org/2017/01/09/raytracing-reflection-refraction-fresnel-total-internal-reflection-and-beers-law/
 - https://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
 - http://stackoverflow.com/questions/14034525/ray-trace-refraction-looks-fake
