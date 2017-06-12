@@ -7,5 +7,6 @@ class FirstScene extends Scene {
       fresnel: new Vector3(0, 0, 0)
     })
     this.objects = [ new Sphere(new Vector3(0, 0, -5), 1, light) ]
+    this.camera = new Camera({ lens: 0.040, focus: 15, position: new Vector3(0, 0, 0), verticalAngle: 0 })
   }
 }

@@ -1,3 +1,4 @@
+// TODO: Camera.lookAt(Vector3)
 class Camera {
   constructor ({ position, direction, sensor, lens, focus, fStop, horizontalAngle, verticalAngle }) {
     this.position = position || new Vector3()

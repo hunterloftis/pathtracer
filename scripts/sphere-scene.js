@@ -4,20 +4,14 @@ class SphereScene extends Scene {
     const materials = this.materials
     this.environment = 'images/stpeters-probe.png'
     this.objects = [
-      // new Sphere(new Vector3(-3.3, 1, -4.3), 1, materials.gold),
-      // new Sphere(new Vector3(-1.1, 1, -5), 1, materials.bluePlastic),
-      // new Sphere(new Vector3(1, 1, -5), 1, materials.silver),
-      // new Sphere(new Vector3(3.2, 1, -4.6), 1, materials.greenGlass),
-      new Sphere(new Vector3(-1005, 0, -8), 1000, materials.bluePlastic),
-      new Sphere(new Vector3(1005, 0, -8), 1000, materials.redPlastic),
-      new Sphere(new Vector3(0, -1003, -8), 1000, materials.whiteLambert),
-      new Sphere(new Vector3(0, 1003, -8), 1000, materials.whiteLambert),
-      new Sphere(new Vector3(0, 0, -1010), 1000, materials.whiteLambert),
-      new Sphere(new Vector3(0, 13, -8), 10.5, materials.brightLight),
-      new Sphere(new Vector3(1, -2, -7), 1, materials.silver),
-      new Sphere(new Vector3(-0.75, -2, -5), 1, materials.glass)
+      new Sphere(new Vector3(-3.3, 1, -4.3), 1, materials.gold),
+      new Sphere(new Vector3(-1.1, 1, -5), 1, materials.bluePlastic),
+      new Sphere(new Vector3(1, 1, -5), 1, materials.silver),
+      new Sphere(new Vector3(3.2, 1, -4.6), 1, materials.greenGlass),
+      new Sphere(new Vector3(0.5, -1000, -8), 1000, materials.whiteLambert),
+      new Sphere(new Vector3(-10, 2, 0), 2, materials.brightLight)
     ]
-    this.camera = new Camera({ lens: 0.040, focus: 15, position: new Vector3(0, 0, 7), verticalAngle: 0 })
+    this.camera = new Camera({ lens: 0.055, focus: 14, position: new Vector3(0, 6, 8), verticalAngle: 25 })
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
   get materials () {
