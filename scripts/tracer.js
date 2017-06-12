@@ -9,7 +9,7 @@ class Tracer {
     this._index = 0
     this._traces = 0
     this._TICK = 50
-    this._ADAPTIVE = 0.1
+    this._ADAPTIVE = 0.25
     this._debug = this._debug.bind(this)
     this._update = this._update.bind(this)
     this._gamma = this._gamma.bind(this)
@@ -38,11 +38,11 @@ class Tracer {
     const pixel = this._pixelForIndex(this._index)
     const rgbaIndex = (pixel.x + pixel.y * this.width) * 4
     const limit = Math.ceil(this._index / (this.width * this.height) + 1)
-    let last = this._averageAt(pixel).ave
+    let last = this._averageAt(pixel)
     for (let samples = 0; samples < limit; samples++) {
       const light = this._trace(pixel)
       const rgb = light.array
-      const noise = Math.abs(light.ave - last) / (last + 1e-6)
+      const noise = light.minus(last).length / (last.length + 1e-6)
       last = light.ave
       for (let i = 0; i < 3; i++) {
         this._buffer[rgbaIndex + i] += rgb[i]
@@ -56,10 +56,10 @@ class Tracer {
   }
   _colorPixel(pixel) {
     const index = (pixel.x + pixel.y * this.width) * 4
-    // const average = this._averageAt(pixel)
-    // const color = average.array.map(this._gamma)
-    const exp = this._buffer[index + 3] * 3
-    const color = [exp, exp, exp]
+    const average = this._averageAt(pixel)
+    const color = average.array.map(this._gamma)
+    // const exp = this._buffer[index + 3] * 3
+    // const color = [exp, exp, exp]
     this._pixels.set(color, index)
   }
   _averageAt(pixel) {

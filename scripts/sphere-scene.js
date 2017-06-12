@@ -18,8 +18,8 @@ class SphereScene extends Scene {
     return {
       whiteLambert: new Material({
         color: new Vector3(1, 1, 1),
-        fresnel: new Vector3(0.03, 0.03, 0.03),
-        gloss: 0
+        fresnel: new Vector3(0.04, 0.04, 0.04),
+        gloss: 0.1
       }),
       shinyBlack: new Material({
         color: new Vector3(0, 0, 0),
@@ -67,7 +67,7 @@ class SphereScene extends Scene {
         fresnel: new Vector3(0.05, 0.05, 0.05)
       }),
       brightLight: new Material({
-        light: new Vector3(3000, 3000, 3000),
+        light: new Vector3(5000, 5000, 5000),
         transparency: 1,
         fresnel: new Vector3(0, 0, 0)
       })
