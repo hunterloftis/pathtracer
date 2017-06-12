@@ -30,8 +30,7 @@
 
   const view = document.getElementById('view')
   const scene = new SphereScene()
-  const camera = new Camera({ lens: 0.040, focus: 15, position: new Vector3(0, 0, 7), verticalAngle: 0 })
-  const tracer = new Tracer({ canvas: view, scene, camera, width: view.width, height: view.height, bounces: 10, debug: 3000 })
+  const tracer = new Tracer({ scene, width: view.width, height: view.height, bounces: 10, debug: 3000 })
   const renderer = new CanvasRenderer(tracer, view)
 
   scene.load().then(() => tracer.start())

@@ -1,7 +1,6 @@
 class Tracer {
-  constructor ({ scene, camera, width=320, height=240, bounces=10, gamma = 2.2, debug = 0}) {
+  constructor ({ scene, width=320, height=240, bounces=10, gamma = 2.2, debug = 0}) {
     Object.assign(this, { scene, bounces, gamma, width, height, debug })
-    this._camera = camera || new Camera({ fov: 40 })
     this._buffer = new Float64Array(this.width * this.height * 4).fill(0)
     this._imageData = new ImageData(this.width, this.height)
     this._pixels = this._imageData.data.fill(0)
@@ -80,7 +79,7 @@ class Tracer {
     return Math.pow(brightness / 255, (1 / this.gamma)) * 255
   }
   _trace (pixel) {
-    let ray = this._camera.ray(pixel.x, pixel.y, this.width, this.height)
+    let ray = this.scene.camera.ray(pixel.x, pixel.y, this.width, this.height)
     let signal = new Vector3(1, 1, 1)
     let energy = new Vector3(0, 0, 0)
 

@@ -17,6 +17,7 @@ class SphereScene extends Scene {
       new Sphere(new Vector3(1, -2, -7), 1, materials.silver),
       new Sphere(new Vector3(-0.75, -2, -5), 1, materials.glass)
     ]
+    this.camera = new Camera({ lens: 0.040, focus: 15, position: new Vector3(0, 0, 7), verticalAngle: 0 })
   }
   // http://blog.selfshadow.com/publications/s2015-shading-course/hoffman/s2015_pbs_physics_math_slides.pdf
   get materials () {
