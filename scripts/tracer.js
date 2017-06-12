@@ -56,10 +56,10 @@ class Tracer {
   }
   _colorPixel(pixel) {
     const index = (pixel.x + pixel.y * this.width) * 4
-    const average = this._averageAt(pixel)
-    const color = average.array.map(this._gamma)
-    // const exp = this.buffer[index + 3] * 3
-    // const color = [exp, exp, exp]
+    // const average = this._averageAt(pixel)
+    // const color = average.array.map(this._gamma)
+    const exp = this._buffer[index + 3] * 3
+    const color = [exp, exp, exp]
     this._pixels.set(color, index)
   }
   _averageAt(pixel) {
