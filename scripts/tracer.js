@@ -1,63 +1,59 @@
 class Tracer {
-  constructor ({ canvas, scene, camera, width=320, height=240, bounces=10, gamma = 2.2, debug = 0}) {
+  constructor ({ scene, camera, width=320, height=240, bounces=10, gamma = 2.2, debug = 0}) {
     Object.assign(this, { scene, bounces, gamma, width, height, debug })
-    this.buffer = new Float64Array(this.width * this.height * 4).fill(0)
-    this.imageData = canvas.getContext('2d').getImageData(0, 0, this.width, this.height)  // TODO: replace with a new non-DOM-based imageData
-    this.pixels = this.imageData.data.fill(0)
-    this.exposures = 0
-    this.maxSamples = 16
-    this.noiseThreshold = 32
     this._camera = camera || new Camera({ fov: 40 })
-    this._black = new Vector3()
-    this._gamma = this._gamma.bind(this)
-    for (let i = 3; i < this.pixels.length; i += 4) this.pixels[i] = 255
-    this._totalExposureTime = 0
+    this._buffer = new Float64Array(this.width * this.height * 4).fill(0)
+    this._imageData = new ImageData(this.width, this.height)
+    this._pixels = this._imageData.data.fill(0)
+    for (let i = 3; i < this._pixels.length; i += 4) this._pixels[i] = 255
+    this._time = 0
     this._index = 0
+    this._traces = 0
+    this._TICK = 50
+    this._ADAPTIVE = 0.1
     this._debug = this._debug.bind(this)
     this._update = this._update.bind(this)
+    this._gamma = this._gamma.bind(this)
   }
   start () {
     if (this.debug > 0) setInterval(this._debug, this.debug)
     this._update()
   }
-  getData () {
-    return this.imageData.data
+  get data () {
+    return this._imageData
   }
   _update () {
-    const end = performance.now() + 50
-    do {
-      this._expose()
-    } while (performance.now() < end)
+    const start = performance.now()
+    const end = start + this._TICK
+    do { this._expose() } while (performance.now() < end)
+    this._time += performance.now() - start
     requestAnimationFrame(this._update)
   }
   _debug () {
-    const seconds = this._totalExposureTime / 1000
-    const nspt = Math.floor(this._totalExposureTime / this.exposures * 1000000)
-    const tpp = Math.round(this.exposures / (this.width * this.height))
+    const seconds = Math.round(this._time / 1000)
+    const nspt = Math.floor(this._time / this._traces * 1000000)
+    const tpp = Math.round(this._traces / (this.width * this.height))
     console.log(`${seconds}s, ${nspt}ns/trace, ${tpp} traces/pixel`)
   }
   _expose () {
-    const start = performance.now()
     const pixel = this._pixelForIndex(this._index)
     const rgbaIndex = (pixel.x + pixel.y * this.width) * 4
     const limit = Math.ceil(this._index / (this.width * this.height) + 1)
-    const first = this._averageAt(pixel)
-    let last = first.ave
+    let last = this._averageAt(pixel).ave
     for (let samples = 0; samples < limit; samples++) {
       const light = this._trace(pixel)
       const rgb = light.array
       const noise = Math.abs(light.ave - last) / (last + 1e-6)
       last = light.ave
       for (let i = 0; i < 3; i++) {
-        this.buffer[rgbaIndex + i] += rgb[i]
+        this._buffer[rgbaIndex + i] += rgb[i]
       }
-      this.buffer[rgbaIndex + 3]++
-      this.exposures++
-      if (noise < 0.1) break
+      this._buffer[rgbaIndex + 3]++
+      this._traces++
+      if (noise < this._ADAPTIVE) break
     }
     this._colorPixel(pixel)
     this._index++
-    this._totalExposureTime += performance.now() - start
   }
   _colorPixel(pixel) {
     const index = (pixel.x + pixel.y * this.width) * 4
@@ -65,15 +61,15 @@ class Tracer {
     const color = average.array.map(this._gamma)
     // const exp = this.buffer[index + 3] * 3
     // const color = [exp, exp, exp]
-    this.pixels.set(color, index)
+    this._pixels.set(color, index)
   }
   _averageAt(pixel) {
     if (pixel.x < 0 || pixel.x >= this.width || pixel.y < 0 || pixel.y >= this.height) {
       return null
     }
     const index = (pixel.x + pixel.y * this.width) * 4
-    const rgb = this.buffer.slice(index, index + 3)
-    const exposures = this.buffer[index + 3]
+    const rgb = this._buffer.slice(index, index + 3)
+    const exposures = this._buffer[index + 3]
     return new Vector3(...rgb).scaledBy(1 / exposures)
   }
   _pixelForIndex(index) {
