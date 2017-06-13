@@ -18,3 +18,13 @@ A very simple path tracer in the browser.
   - Fresnel reflection, transmission, absorption, diffusion
   - Color, index of refraction, gloss, transparency, separate fresnel channels, metals
 - Arbitrary light sources
+
+## Running locally
+
+```
+$ git clone https://github.com/hunterloftis/pathtracer.git
+$ cd pathtracer
+$ yarn install
+$ yarn start
+$ open localhost:8000
+```
