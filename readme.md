@@ -18,6 +18,8 @@ A very simple path tracer in the browser with zero dependencies.
   - Fresnel reflection, transmission, absorption, diffusion
   - Color, index of refraction, gloss, transparency, separate fresnel channels, metals
 - Arbitrary light sources
+- Physically based camera
+  - sensor, aperture, focus, depth of field
 
 ## Code
 
