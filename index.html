@@ -31,8 +31,9 @@
   <script>
 
   const view = document.getElementById('view')
-  const scenes = { Box: BoxScene, Spheres: SphereScene, First: FirstScene }
-  const scene = new scenes['Spheres']() // TODO: querystring
+  const scenes = { box: BoxScene, spheres: SphereScene, first: FirstScene }
+  const sceneName = new URLSearchParams(document.location.search.substring(1)).get('scene') || 'spheres'
+  const scene = new scenes[sceneName]()
   const tracer = new Tracer({ scene, width: view.width, height: view.height, bounces: 10, debug: 3000 })
   const renderer = new CanvasRenderer(tracer, view)
 
