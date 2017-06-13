@@ -20,6 +20,8 @@ A very simple path tracer in the browser with zero dependencies.
 - Arbitrary light sources
 - Physically based camera
   - sensor, aperture, focus, depth of field
+- Antialiasing
+- Spherical environment maps
 
 ## Code
 
