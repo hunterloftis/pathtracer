@@ -7,7 +7,7 @@ A very simple path tracer in the browser.
 ## Scenes
 
 - [Spheres](https://hunterloftis.github.io/pathtracer/?scene=spheres)
-- [Box](https://hunterloftis.github.io/pathtracer/?scene=spheres)
+- [Box](https://hunterloftis.github.io/pathtracer/?scene=box)
 
 ## Features
 
