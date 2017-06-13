@@ -2,6 +2,9 @@
 
 A very simple path tracer in the browser with zero dependencies.
 
+[Path tracing](https://en.wikipedia.org/wiki/Path_tracing)
+is a technique that simulates the behavior of light to render photorealistic images:
+
 ![output](https://user-images.githubusercontent.com/364501/27105261-c4fc70c4-5043-11e7-98d7-3b39d1d7fe65.png)
 
 ## Scenes
