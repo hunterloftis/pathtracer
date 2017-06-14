@@ -30,7 +30,7 @@ is a technique that simulates the behavior of light to render photorealistic ima
 
 The renderer is about 430 lines written for readability, not terseness.
 The core components of any monte carlo path tracer are its
-[trace function](https://github.com/hunterloftis/pathtracer/blob/gh-pages/scripts/tracer.js#L81) function
+[trace function](https://github.com/hunterloftis/pathtracer/blob/gh-pages/scripts/tracer.js#L81)
 and
 [Bidirectional Scattering Distribution Function](https://github.com/hunterloftis/pathtracer/blob/gh-pages/scripts/material.js#L16) (bsdf).
 
